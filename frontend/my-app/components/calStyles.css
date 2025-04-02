@@ -1,0 +1,49 @@
+/* Full-screen calendar */
+.custom-calendar {
+    width: 100vw !important;  /* Full width of viewport */
+    height: 100vh !important; /* Full height of viewport */
+    font-family: Arial, sans-serif !important;
+    border: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Adjust the calendar container */
+.react-calendar {
+    width: 100% !important;  /* Take full width */
+    max-width: 1200px !important; /* Limit max width */
+    height: 100% !important;
+    max-height: 800px !important; /* Limit max height */
+}
+
+/* Increase the size of each calendar cell */
+.react-calendar__tile {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 1.5rem !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    border: 1px solid #ddd !important;
+}
+
+/* Adjust the calendar header */
+.react-calendar__month-view__weekdays {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    padding: 15px 0 !important;
+}
+
+/* Style the selected day */
+.react-calendar__tile--active {
+    border: 3px solid black !important;
+}
+
+/* Style shaded workout days */
+.workout-day {
+    background-color: #d1d5db !important; /* Gray-300 */
+}
