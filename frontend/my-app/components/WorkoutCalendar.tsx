@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { useWorkout } from "@/context/WorkoutContext";
 import "@/components/calStyles.css";
 
 const WorkoutCalendar = () => {
-  const { workouts } = useWorkout();
+  const [workouts, setWorkouts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 //   const [hoveredDate, setHoveredDate] = useState<string | null>(null);
 
   // Convert workouts array into a dictionary { "YYYY-MM-DD": [workouts] }
@@ -18,14 +19,46 @@ const WorkoutCalendar = () => {
 //     }
 //     workoutsByDate[dateKey].push(workout);
 //   });
-  const groupedWorkouts = workouts.reduce((acc, workout) => {
-    const dateKey = workout.date; // '2025-04-01'
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
+
+useEffect(() => {
+  const fetchWorkouts = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('http://localhost:5000/api/workouts');
+      if (!response.ok) {
+        throw new Error('Failed to fetch workouts');
+      }
+      const data = await response.json();
+      console.log('Raw workouts from backend:', data);
+      const formattedWorkouts = data.map((workout: any) => ({
+        ...workout,
+        workoutName: workout.name || workout.activity || 'Unnamed Workout', // Use activity as fallback
+        date: new Date(workout.date).toLocaleDateString('en-CA', { timeZone: 'UTC' }),
+      }));
+      console.log('Formatted workouts:', formattedWorkouts);
+      setWorkouts(formattedWorkouts);
+    } catch (error) {
+      console.error('Error fetching workouts:', error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
-    acc[dateKey].push(workout.workoutName); // Store only the workout name
-    return acc;
-  }, {});
+  };
+
+  fetchWorkouts();
+}, []);
+
+const groupedWorkouts = workouts.reduce((acc: { [key: string]: string[] }, workout) => {
+  const dateKey = workout.date;
+  if (!acc[dateKey]) {
+    acc[dateKey] = [];
+  }
+  const workoutName = workout.workoutName || 'Unnamed Workout';
+  acc[dateKey].push(workoutName);
+  return acc;
+}, {});
+console.log('Grouped workouts:', groupedWorkouts);
     
   return (
     <div className="relative p-4">

@@ -25,14 +25,38 @@ const AddWorkout = () => {
     resolver: zodResolver(workoutSchema),
   });
 
-  const { addWorkout } = useWorkout(); // Get the addWorkout function
+  //const { addWorkout } = useWorkout(); // Get the addWorkout function
   const router = useRouter();
 
-  const onSubmit = (data: WorkoutFormData) => {
-    addWorkout(data); // Save workout to context
-    reset(); // Clear form
-    router.push("/workouts"); // Navigate to homepage
-  };
+  // const onSubmit = (data: WorkoutFormData) => {
+  //   addWorkout(data); // Save workout to context
+  //   reset(); // Clear form
+  //   router.push("/workouts"); // Navigate to homepage
+  // };
+
+  const onSubmit = async(data: WorkoutFormData) => {
+    try{
+     const response = await fetch("http://localhost:5000/api/workouts", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify(data),
+     });
+ 
+     if (!response.ok) {
+       throw new Error("Failed to add workout");
+     }
+     const result = await response.json();
+     console.log(result);
+ 
+     reset();
+     router.push("/");     //Redirect To DashBoard
+    } catch (error) {
+     console.error("Error adding workout:", error);
+     alert("Failed to add workout");
+    }
+   };
 
   return (
     <Layout>

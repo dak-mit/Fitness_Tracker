@@ -1,6 +1,6 @@
 "use client";
 import Layout from "../../../components/Layout";
-import { useWorkout } from "../../../context/WorkoutContext";
+//import { useWorkout } from "../../../context/WorkoutContext";
 import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,Label } from "recharts";
 
@@ -46,9 +46,27 @@ const getWeeklyCaloriesData = (workouts: any[]) => {
 };
 
 const StatsPage = () => {
-  const { workouts } = useWorkout();
+  const [workouts, setWorkouts] = useState([]);
   const [weeklyData, setWeeklyData] = useState([]);
 
+  useEffect(() => {
+    const fetchWorkouts = async() =>{
+      try {
+        const response = await fetch('http://localhost:5000/api/workouts');
+        if(!response.ok){
+          throw new Error('Failed to fetch workouts')
+        }
+        const data = await response.json();
+        setWorkouts(data);
+      } catch (error) {
+        console.error('Error fetching workouts:', error);
+      }
+    };  
+
+    fetchWorkouts();
+  }, []);
+
+  //To Update Weekly Data
   useEffect(() => {
     const data = getWeeklyCaloriesData(workouts);
     setWeeklyData(data);

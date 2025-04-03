@@ -1,7 +1,7 @@
 "use client";
 import Layout from "../../components/Layout";
 import { useWorkout } from "../../context/WorkoutContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WorkoutCalendar from "../../components/WorkoutCalendar";
 
 // Helper function to filter weekly workouts
@@ -20,8 +20,56 @@ const getWeeklyWorkouts = (workouts: any[]) => {
 };
 
 export default function Home() {
-  const { workouts } = useWorkout();
+  //const { workouts, } = useWorkout();
+  const [workouts, setWorkouts] = useState([]);
   const [activeTab, setActiveTab] = useState("all-time");
+
+  //Fetching From The Backend
+  useEffect(() => {
+    fetchWorkouts().catch((error) => {
+      console.error('Error fetching workouts:', error);
+    });
+  }, []);
+
+  const fetchWorkouts = async()=>{
+    try {
+      const response = await fetch('http://localhost:5000/api/workouts');
+      if(!response.ok){
+        throw new Error('Failed to fetch workouts')
+      }
+      const data = await response.json();
+      setWorkouts(data);
+    } catch (error) {
+      console.error('Error fetching workouts:', error);
+    }
+  };
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Handle deleting a workout
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this workout?')) {
+      return;
+    }
+
+    setIsDeleting(true);
+  try {
+    const response = await fetch(`http://localhost:5000/api/workouts/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete workout');
+    }
+
+    fetchWorkouts();
+  } catch (error) {
+    console.error('Error deleting workout:', error.message);
+    alert('Failed to delete workout. Please try again.');
+  } finally {
+    setIsDeleting(false);
+  }
+  };
 
   // Calculate stats for all time
   const totalDuration = workouts.reduce((sum, w) => sum + (w.duration || 0), 0);
@@ -33,6 +81,7 @@ export default function Home() {
   const weeklyDuration = weeklyWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0);
   const weeklyCalories = weeklyWorkouts.reduce((sum, w) => sum + (w.calories || 0), 0);
   const weeklyWorkoutsCount = weeklyWorkouts.length;
+
 
   return (
     <Layout>
@@ -93,6 +142,7 @@ export default function Home() {
               <th className="p-2 text-left">Activity</th>
               <th className="p-2 text-left">Duration</th>
               <th className="p-2 text-left">Calories</th>
+              <th className="p-2 text-left">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -102,6 +152,15 @@ export default function Home() {
                 <td className="p-2">{workout.activity}</td>
                 <td className="p-2">{workout.duration} min</td>
                 <td className="p-2">{workout.calories} kcal</td>
+                <td className="p-2">
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    onClick={() => handleDelete(workout._id)}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? 'Deleting...' : 'Delete'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
