@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv'); 
 const workoutRoutes = require('./routes/workouts');
+const goalsRoutes = require('./routes/Goals');
 
 dotenv.config();
 const app = express();
@@ -28,7 +29,8 @@ mongoose.connect(MONGODB_URI)
 
 
 app.use('/api/workouts', workoutRoutes);
-  
+app.use('/api/goals', goalsRoutes);
+
 app.get('/api/samplecall', (req, res) => {
     // Send a JSON response with a message
     res.json({ message: 'Hello World from the backend!' });

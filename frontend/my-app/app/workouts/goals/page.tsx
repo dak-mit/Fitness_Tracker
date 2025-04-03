@@ -1,6 +1,6 @@
 "use client";
 import Layout from "@/components/Layout";
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { CircularProgressbar,buildStyles } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 import Modal from "react-modal";
@@ -9,15 +9,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 Modal.setAppElement("body");
 
+
+
 const goalsPage = () => {
-  const [showForm, setShowForm] = useState(false);
+  //const [showForm, setShowForm] = useState(false);
 
-  const [goals, setGoals] = useState([
-    { name: "Run 10km", progress: 70, completed: false },
-    { name: "Lose 5kg", progress: 100, completed: true },
-  ]);
+  // const [goals, setGoals] = useState([
+  //   { name: "Run 10km", progress: 70, completed: false },
+  //   { name: "Lose 5kg", progress: 100, completed: true },
+  // ]);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [goals, setGoals] = useState([]);
+  const [workouts, setWorkouts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
+  
   const goalSchema = z.object({
     workoutName: z.string().min(1, "Workout name is required"),
     goalType: z.string().min(1, "Goal type is required"),
@@ -35,8 +42,98 @@ const goalsPage = () => {
     } = useForm<GoalFormData>({
       resolver: zodResolver(goalSchema),
     });
-    
-    const onSubmit = (data: GoalFormData) => {
+
+
+    const calculateProgress = (goal, workouts) => {
+      // Determine the start date based on goalStart
+      let startDate;
+      const today = new Date();
+      if (goal.goalStart === "This week") {
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - today.getDay()); // Start of this week (Sunday)
+      } else if (goal.goalStart === "Next week") {
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - today.getDay() + 7); // Start of next week
+      } else {
+        startDate = new Date(goal.createdAt || today); // Fallback to creation date or today
+      }
+
+      // Filter workouts that match the goal's name and are after the start date
+      const relevantWorkouts = workouts.filter((workout) => {
+        const workoutDate = new Date(workout.date);
+        return (
+          workout.workoutName.toLowerCase().includes(goal.name.toLowerCase()) &&
+          workoutDate >= startDate
+        );
+      });
+
+      let progress = 0;
+      if (goal.typeOfGoal === "numWorkouts") {
+        const numWorkouts = relevantWorkouts.length;
+        progress = (numWorkouts / goal.targetOfGoal) * 100;
+      } else if (goal.typeOfGoal === "duration") {
+        const totalDuration = relevantWorkouts.reduce((sum, workout) => sum + (workout.duration || 0), 0);
+        progress = (totalDuration / goal.targetOfGoal) * 100;
+      } else if (goal.typeOfGoal === "calories") {
+        const totalCalories = relevantWorkouts.reduce((sum, workout) => sum + (workout.calories || 0), 0);
+        progress = (totalCalories / goal.targetOfGoal) * 100;
+      }
+
+      // Cap progress at 100% and round to the nearest integer
+      progress = Math.min(Math.round(progress), 100);
+
+      // Update completed status
+      const completed = progress >= 100;
+
+      // Return updated goal
+      return {
+        ...goal,
+        progress,
+        completed,
+      };
+    };
+
+    //Code To Fetch Goals And Workouts From The Backend
+    useEffect(() => {
+      const fetchData = async () => {
+        setIsLoading(true);
+        setError(null)
+        try {
+          const goalsResponse = await fetch("http://localhost:4000/api/goals");
+          if(!goalsResponse.ok) {
+            throw new Error("Failed to fetch goals");
+          }
+          const goalsData = await goalsResponse.json();
+
+          const workoutsResponse = await fetch("http://localhost:4000/api/workouts");
+          if(!workoutsResponse.ok) {
+            throw new Error("Failed to fetch workouts");
+          }
+          const workoutsData = await workoutsResponse.json();
+
+          const updatedGoals = goalsData.map((goal) => calculateProgress(goal, workoutsData));
+
+          setGoals(updatedGoals);
+          setWorkouts(workoutsData);
+        } catch (error) {
+          setError(error.message);
+        }finally{
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
+    }, []);
+
+
+    useEffect(() => {
+      if(workouts.length >0 && goals.length > 0) {
+        const updatedGoals = goals.map((goal) => calculateProgress(goal,workouts));
+        setGoals(updatedGoals);
+      }
+    },[workouts]);
+
+    const onSubmit = async (data: GoalFormData) => {
       const newGoal = {
         name: data.workoutName,
         typeOfGoal: data.goalType,
@@ -45,9 +142,28 @@ const goalsPage = () => {
         progress: 0,
         completed:false,
       }
-      setGoals((prevGoals) => [...prevGoals, newGoal]);
-      console.log("Closing modal...");
-      setModalOpen(false);
+      
+      // setGoals((prevGoals) => [...prevGoals, newGoal]);
+      // console.log("Closing modal...");
+      // setModalOpen(false);
+
+      try{
+        const response = await fetch("http://localhost:4000/api/goals",{
+          method: "POST",
+          headers: {"Content-Type" : "application/json"},
+          body: JSON.stringify(newGoal)
+        });
+        if(!response.ok){
+          throw new Error("Failed To create GOAL");
+        }
+        const createdGoal = await response.json();
+        setGoals((prevGoals) => [...prevGoals, createdGoal]);
+        setModalOpen(false);
+        reset();
+      }catch(error){
+        console.error("Failed to create goal:", error);
+        alert("Failed To Create Goal. Please Try Again.")
+      }
     };
   
 
