@@ -8,24 +8,13 @@ const WorkoutCalendar = () => {
   const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-//   const [hoveredDate, setHoveredDate] = useState<string | null>(null);
-
-  // Convert workouts array into a dictionary { "YYYY-MM-DD": [workouts] }
-//   const workoutsByDate: { [key: string]: any[] } = {};
-//   workouts.forEach((workout) => {
-//     const dateKey = new Date(workout.date).toISOString().split("T")[0];
-//     if (!workoutsByDate[dateKey]) {
-//       workoutsByDate[dateKey] = [];
-//     }
-//     workoutsByDate[dateKey].push(workout);
-//   });
 
 useEffect(() => {
   const fetchWorkouts = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5000/api/workouts');
+      const response = await fetch('http://localhost:4000/api/workouts');
       if (!response.ok) {
         throw new Error('Failed to fetch workouts');
       }

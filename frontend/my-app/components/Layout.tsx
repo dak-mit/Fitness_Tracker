@@ -53,7 +53,8 @@ const Layout = ({ children }: LayoutProps) => {
             key={item.path}
             href={item.path}
             className={`text-lg font-semibold hover:border-b-1 border-white ${
-              pathname === item.path ? "border-b-1 border-white" : ""
+              item.path === "/" ? (pathname === "/" ? "border-b-1 border-white" : "") :
+              pathname.startsWith(item.path) ? "border-b-1 border-white" : ""
             }`}
           >
             {item.name}

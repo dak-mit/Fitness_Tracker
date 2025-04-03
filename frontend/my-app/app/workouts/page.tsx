@@ -33,7 +33,7 @@ export default function Home() {
 
   const fetchWorkouts = async()=>{
     try {
-      const response = await fetch('http://localhost:5000/api/workouts');
+      const response = await fetch('http://localhost:4000/api/workouts');
       if(!response.ok){
         throw new Error('Failed to fetch workouts')
       }
@@ -54,7 +54,7 @@ export default function Home() {
 
     setIsDeleting(true);
   try {
-    const response = await fetch(`http://localhost:5000/api/workouts/${id}`, {
+    const response = await fetch(`http://localhost:4000/api/workouts/${id}`, {
       method: 'DELETE',
     });
 
