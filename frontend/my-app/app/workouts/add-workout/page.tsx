@@ -31,7 +31,7 @@ const AddWorkout = () => {
   const onSubmit = (data: WorkoutFormData) => {
     addWorkout(data); // Save workout to context
     reset(); // Clear form
-    router.push("/"); // Navigate to homepage
+    router.push("/workouts"); // Navigate to homepage
   };
 
   return (

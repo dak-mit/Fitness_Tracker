@@ -19,7 +19,7 @@ const Layout = ({ children }: LayoutProps) => {
         
         <ul className="space-y-4">
         {[
-        { name: "Dashboard", path: "/" },
+        { name: "Summary", path: "/workouts" },
         { name: "Add Workout", path: "/workouts/add-workout" },
         { name: "Goals", path: "/workouts/goals" },
         { name: "Stats", path: "/workouts/stats" },
@@ -43,8 +43,9 @@ const Layout = ({ children }: LayoutProps) => {
       <main className="flex-1 p-8">
 
       <header className="flex justify-center space-x-8 border-b pb-4">
-        {[
-          { name: "WORKOUTS", path: "/" },
+          {[
+            { name: "HOME", path: "/" },
+          { name: "WORKOUTS", path: "/workouts" },
           { name: "NUTRITION", path: "/nutrition" },
           
         ].map((item) => (
@@ -52,7 +53,7 @@ const Layout = ({ children }: LayoutProps) => {
             key={item.path}
             href={item.path}
             className={`text-lg font-semibold hover:border-b-1 border-white ${
-              pathname.startsWith(item.path) ? "border-b-1 border-white" : ""
+              pathname === item.path ? "border-b-1 border-white" : ""
             }`}
           >
             {item.name}
