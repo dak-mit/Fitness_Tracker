@@ -5,6 +5,7 @@
     "@heroui/progress": "^2.2.12",
     "@heroui/react": "^2.7.5",
     "@mui/material": "^7.0.1",
+    "framer-motion": "^11.18.2",
     "react-circular-progressbar": "^2.2.0"
   }
 }

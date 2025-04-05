@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+
 Modal.setAppElement("body");
 
 
@@ -136,8 +137,8 @@ const goalsPage = () => {
     const onSubmit = async (data: GoalFormData) => {
       const newGoal = {
         name: data.workoutName,
-        typeOfGoal: data.goalType,
-        targetOfGoal: data.goalTarget,
+        goalType: data.goalType,
+        goalTarget: data.goalTarget,
         goalStart:data.goalStart,
         progress: 0,
         completed:false,
@@ -187,11 +188,11 @@ const goalsPage = () => {
                     })}
                   />
                   </div>
-                  <p className="text-center mt-2">{goal.typeOfGoal === "numWorkouts"
-          ? `Complete ${goal.targetOfGoal} ${goal.name} ${goal.goalStart}`
-          : goal.typeOfGoal === "calories"
-          ? `Burn ${goal.targetOfGoal} calories from ${goal.goalStart} by ${goal.name}`
-          : `Do ${goal.targetOfGoal} minutes of ${goal.name} ${goal.goalStart}`}</p>
+                  <p className="text-center mt-2">{goal.goalType === "numWorkouts"
+          ? `Complete ${goal.goalTarget} ${goal.name} ${goal.goalStart}`
+          : goal.goalType === "calories"
+          ? `Burn ${goal.goalTarget} calories from ${goal.goalStart} by ${goal.name}`
+          : `Do ${goal.goalTarget} minutes of ${goal.name} ${goal.goalStart}`}</p>
                 </div>
               ))}
           </div>
@@ -238,14 +239,14 @@ const goalsPage = () => {
                     <option value="calories">Calories</option>
                     
                   </select>
-                  {errors.activity && <p className="text-red-500 text-sm">{errors.goalType.message}</p>}
+                  {errors.goalType && <p className="text-red-500 text-sm">{errors.goalType.message}</p>}
                 </div>
 
                 {/* goal target */}
                 <div className="mb-4">
                   <label className="block text-black-700">Goal Target <span className="text-red-700">*</span></label>
                   <input type="number" {...register("goalTarget", { valueAsNumber: true })} className="w-full p-2 border rounded" />
-                  {errors.duration && <p className="text-red-500 text-sm">{errors.goalTarget.message}</p>}
+                  {errors.goalTarget && <p className="text-red-500 text-sm">{errors.goalTarget.message}</p>}
                 </div>
 
                 {/* goal start */}
@@ -256,7 +257,7 @@ const goalsPage = () => {
                     <option value="This week">This week</option>
                     <option value="Next week">Next week</option>
                   </select>
-                  {errors.activity && <p className="text-red-500 text-sm">{errors.activity.message}</p>}
+                  {errors.goalStart && <p className="text-red-500 text-sm">{errors.goalStart.message}</p>}
                 </div>
 
                 {/* Save Button */}
@@ -264,8 +265,6 @@ const goalsPage = () => {
                   SAVE
                 </button>
               </form>
-            
-            
             
           </Modal>
 

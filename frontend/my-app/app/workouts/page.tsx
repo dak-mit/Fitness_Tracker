@@ -3,7 +3,8 @@ import Layout from "../../components/Layout";
 import { useWorkout } from "../../context/WorkoutContext";
 import { useEffect, useState } from "react";
 import WorkoutCalendar from "../../components/WorkoutCalendar";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash,faClock,faHeart,faDumbbell,faPersonRunning } from '@fortawesome/free-solid-svg-icons'
 // Helper function to filter weekly workouts
 const getWeeklyWorkouts = (workouts: any[]) => {
   const currentDate = new Date();
@@ -90,38 +91,38 @@ export default function Home() {
 
         {/* Fitness Summary */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="p-4 bg-gray-200 rounded-lg text-center">
-            <h3 className="text-lg font-semibold">Total Duration</h3>
-            <p className="text-2xl font-bold">{activeTab === "all-time" ? totalDuration : weeklyDuration} min</p>
+          <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
+            <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faClock} className="fa-fw text-[#3b84d9]"/>Total Duration</h3>
+            <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalDuration : weeklyDuration} min</p>
           </div>
 
-          <div className="p-4 bg-gray-200 rounded-lg text-center">
-            <h3 className="text-lg font-semibold">Calories Burned</h3>
-            <p className="text-2xl font-bold">{activeTab === "all-time" ? totalCalories : weeklyCalories} kcal</p>
+          <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
+            <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faHeart} className="fa-fw text-[#3b84d9]"/>Calories Burned</h3>
+            <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalCalories : weeklyCalories} kcal</p>
           </div>
 
-          <div className="p-4 bg-gray-200 rounded-lg text-center">
-            <h3 className="text-lg font-semibold">Workouts</h3>
-            <p className="text-2xl font-bold">{activeTab === "all-time" ? totalWorkouts : weeklyWorkoutsCount}</p>
+          <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
+            <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faPersonRunning} className="fa-fw text-[#3b84d9]"/>Workouts</h3>
+            <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalWorkouts : weeklyWorkoutsCount}</p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b mb-4">
+        <div className="flex mb-4 pb-2">
           <button
-            className={`p-3 ${activeTab === "all-time" ? "border-b-2 border-blue-500 font-bold" : "text-gray-600"}`}
+            className={`p-3 ${activeTab === "all-time" ? "block bg-[#3b84d9] px-4 rounded-4xl duration-200 text-white font-bold" : "text-gray-600 hover:block hover:bg-[#74afe6] hover:px-4 hover:rounded-4xl hover:duration-300 hover:text-white hover:font-bold"}`}
             onClick={() => setActiveTab("all-time")}
           >
             All Time
           </button>
           <button
-            className={`p-3 ml-4 ${activeTab === "weekly" ? "border-b-2 border-blue-500 font-bold" : "text-gray-600"}`}
+            className={`p-3 ml-4 ${activeTab === "weekly" ? "block bg-[#3b84d9] px-4 rounded-4xl duration-200 text-white font-bold" : "text-gray-600 hover:block hover:bg-[#74afe6] hover:px-4 hover:rounded-4xl hover:duration-300 hover:text-white hover:font-bold"}`}
             onClick={() => setActiveTab("weekly")}
           >
             Weekly View
           </button>
           <button
-            className={`p-3 ml-4 ${activeTab === "calendar" ? "border-b-2 border-blue-500 font-bold" : "text-gray-600"}`}
+            className={`p-3 ml-4 ${activeTab === "calendar" ? "block bg-[#3b84d9] px-4 rounded-4xl duration-200 text-white font-bold" : "text-gray-600 hover:block hover:bg-[#74afe6] hover:px-4 hover:rounded-4xl hover:duration-300 hover:text-white hover:font-bold"}`}
             onClick={() => setActiveTab("calendar")}
           >
             Calendar View
@@ -135,30 +136,30 @@ export default function Home() {
         ) : (
             <>
            
-        <table className="w-full mt-6 border">
+        <table className="w-full mt-6 border-t border-b">
           <thead>
-            <tr className="bg-gray-200">
-              <th className="p-2 text-left">Date</th>
+            <tr className="bg-white">
+              <th className="p-2 text-left border-top">Date</th>
               <th className="p-2 text-left">Activity</th>
               <th className="p-2 text-left">Duration</th>
               <th className="p-2 text-left">Calories</th>
-              <th className="p-2 text-left">Delete</th>
+              <th className="p-2 text-left"></th>
             </tr>
           </thead>
           <tbody>
             {(activeTab === "all-time" ? workouts : weeklyWorkouts).map((workout, index) => (
               <tr key={index} className="border-t">
-                <td className="p-2">{workout.date}</td>
+                <td className="p-2">{new Date(workout.date).toLocaleDateString("en-GB")}</td>
                 <td className="p-2">{workout.activity}</td>
                 <td className="p-2">{workout.duration} min</td>
                 <td className="p-2">{workout.calories} kcal</td>
                 <td className="p-2">
                   <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    
                     onClick={() => handleDelete(workout._id)}
                     disabled={isDeleting}
                   >
-                    {isDeleting ? 'Deleting...' : 'Delete'}
+                    {isDeleting ? 'Deleting...' : <FontAwesomeIcon icon={faTrash} className="fa-fw"/>}
                   </button>
                 </td>
               </tr>

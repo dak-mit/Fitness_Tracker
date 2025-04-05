@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import "../app/globals.css";
 import { usePathname, useRouter } from "next/navigation";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,9 +14,9 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   return (
-    <div className="flex min-h-screen bg-black text-white">
+    <div className="flex min-h-screen bg-[#f5f5f7] text-white">
       {/* Sidebar */}
-      <nav className="w-64 p-6 bg-gray-900">
+      <nav className="w-64 p-5 bg-[#0b0e13]">
         <h1 className="text-2xl font-bold mb-30">Fitness Tracker</h1>
         
         <ul className="space-y-4">
@@ -27,8 +29,8 @@ const Layout = ({ children }: LayoutProps) => {
         <li key={item.path}>
           <Link
             href={item.path}
-            className={`hover:border-b-1 border-white ${
-              pathname === item.path ? "border-b-1 border-white" : ""
+            className={`block px-4 py-2 rounded-md duration-200 ${
+              pathname === item.path ? "bg-gray-800 font-semibold" : "hover:bg-gray-800"
             }`}
           >
             {item.name}
@@ -40,29 +42,33 @@ const Layout = ({ children }: LayoutProps) => {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-0">
 
-      <header className="flex justify-center space-x-8 border-b pb-4">
+      <header className="w-full flex justify-center space-x-12 border-b border-gray-800 bg-[#0b0e13] py-4">
           {[
-            { name: "HOME", path: "/" },
+            { name: "HOME" , path: "/" },
           { name: "WORKOUTS", path: "/workouts" },
           { name: "NUTRITION", path: "/nutrition" },
           
-        ].map((item) => (
+          ].map((item) => {
+            const isActive =
+      item.path === "/" ? pathname === "/" : pathname.startsWith(item.path);
+          return(
           <Link
-            key={item.path}
+            key={item.path} 
             href={item.path}
-            className={`text-lg font-semibold hover:border-b-1 border-white ${
-              item.path === "/" ? (pathname === "/" ? "border-b-1 border-white" : "") :
-              pathname.startsWith(item.path) ? "border-b-1 border-white" : ""
-            }`}
+            className={"relative text-white text-lg font-bold tracking-wide uppercase transition duration-200 hover:opacity-80"}
           >
-            {item.name}
+              {item.name}
+              {isActive && (
+          <span className="absolute -bottom-1 left-1/2 w-3/4 translate-x-[-50%] h-[3px] rounded-full bg-blue-500 transition-all duration-300"></span>
+        )}
           </Link>
-        ))}
+        );
+          })}
       </header>
 
-        {children}
+        <div className="p-8">{children}</div>
       </main>
     </div>
   );
