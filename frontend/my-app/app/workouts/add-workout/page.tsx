@@ -51,7 +51,7 @@ const AddWorkout = () => {
      console.log(result);
  
      reset();
-     router.push("/");     //Redirect To DashBoard
+     router.push("/workouts");     //Redirect To DashBoard
     } catch (error) {
      console.error("Error adding workout:", error);
      alert("Failed to add workout");
@@ -60,7 +60,7 @@ const AddWorkout = () => {
 
   return (
     <Layout>
-      <h2 className="text-2xl font-bold mb-6">Add Workout</h2>
+      <h2 className="text-2xl font-bold mb-6 text-black">Add Workout</h2>
       <div className="mt-6 bg-white text-black p-6 rounded-lg w-[600px] mx-auto">
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-lg shadow-md text-black">
           {/* Workout Name */}

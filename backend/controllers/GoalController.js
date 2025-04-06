@@ -13,9 +13,9 @@ const getGoals = async(req,res) => {
 
 //Create A New Goal
 const createGoal = async(req,res) => {
-    const {name, typeOfGoal, targetOfGoal, goalStart} = req.body;
+    const {name, goalType, goalTarget, goalStart} = req.body;
     try{
-        const goal = await Goal.create({ name, typeOfGoal, targetOfGoal, goalStart});
+        const goal = await Goal.create({ name, goalType, goalTarget, goalStart});
         res.status(201).json({ message: 'Goal created successfully', goal });
     }catch(error){
         res.status(400).json({message: error.message})

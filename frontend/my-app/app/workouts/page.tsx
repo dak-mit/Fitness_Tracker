@@ -87,7 +87,7 @@ export default function Home() {
   return (
     <Layout>
       <div className="mt-6 bg-white text-black p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-4">Fitness Summary - March 2025</h2>
+        <h2 className="text-2xl font-bold mb-4">Fitness Summary</h2>
 
         {/* Fitness Summary */}
         <div className="grid grid-cols-3 gap-4 mb-6">
@@ -126,6 +126,11 @@ export default function Home() {
             onClick={() => setActiveTab("calendar")}
           >
             Calendar View
+          </button>
+          <button
+          className="ml-auto px-4 py-2 bg-[#3b84d9] text-white font-bold rounded-4xl hover:text-[#3b84d9] hover:bg-white border hover:border-[#3b84d9]"
+          >
+           + Add Workout
           </button>
         </div>
 

@@ -7,11 +7,16 @@ import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Poppins } from "next/font/google";
+import { faBullseye,faCheckDouble } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 
 Modal.setAppElement("body");
-
-
-
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+});
 const goalsPage = () => {
   //const [showForm, setShowForm] = useState(false);
 
@@ -20,7 +25,7 @@ const goalsPage = () => {
   //   { name: "Lose 5kg", progress: 100, completed: true },
   // ]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState<GoalFormData[]>([]);
   const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -33,7 +38,11 @@ const goalsPage = () => {
     goalStart: z.string().min(1, "Goal start is required"),
   });
     
-  type GoalFormData = z.infer<typeof goalSchema>;
+  type GoalFormData = z.infer<typeof goalSchema>& {
+    name: string;         // coming from backend
+    progress: number;
+    completed: boolean;
+  };
     
     const {
       register,
@@ -69,15 +78,15 @@ const goalsPage = () => {
       });
 
       let progress = 0;
-      if (goal.typeOfGoal === "numWorkouts") {
+      if (goal.goalType === "numWorkouts") {
         const numWorkouts = relevantWorkouts.length;
-        progress = (numWorkouts / goal.targetOfGoal) * 100;
-      } else if (goal.typeOfGoal === "duration") {
+        progress = (numWorkouts / goal.goalTarget) * 100;
+      } else if (goal.goalType === "duration") {
         const totalDuration = relevantWorkouts.reduce((sum, workout) => sum + (workout.duration || 0), 0);
-        progress = (totalDuration / goal.targetOfGoal) * 100;
-      } else if (goal.typeOfGoal === "calories") {
+        progress = (totalDuration / goal.goalTarget) * 100;
+      } else if (goal.goalType === "calories") {
         const totalCalories = relevantWorkouts.reduce((sum, workout) => sum + (workout.calories || 0), 0);
-        progress = (totalCalories / goal.targetOfGoal) * 100;
+        progress = (totalCalories / goal.goalTarget) * 100;
       }
 
       // Cap progress at 100% and round to the nearest integer
@@ -105,7 +114,7 @@ const goalsPage = () => {
             throw new Error("Failed to fetch goals");
           }
           const goalsData = await goalsResponse.json();
-
+          console.log("Fetched goals:", goalsData);
           const workoutsResponse = await fetch("http://localhost:4000/api/workouts");
           if(!workoutsResponse.ok) {
             throw new Error("Failed to fetch workouts");
@@ -157,7 +166,7 @@ const goalsPage = () => {
         if(!response.ok){
           throw new Error("Failed To create GOAL");
         }
-        const createdGoal = await response.json();
+        const {goal:createdGoal} = await response.json();
         setGoals((prevGoals) => [...prevGoals, createdGoal]);
         setModalOpen(false);
         reset();
@@ -170,9 +179,17 @@ const goalsPage = () => {
 
     return (
       <Layout>
-        <div className="p-4">
+        <div className="mt-6 bg-white text-black p-6 rounded-lg">
           {/* Active Goals Section */}
-          <h2 className="text-xl font-semibold mb-4">Active Goals</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className={`text-xl font-semibold ${poppins.className}`}><FontAwesomeIcon icon={faBullseye} className="fa-fw text-[#3b84d9]"/>Active Goals</h2>
+          <button
+          className="px-4 py-2 bg-[#3b84d9] text-white font-bold rounded-4xl hover:text-[#3b84d9] hover:bg-white border hover:border-[#3b84d9]"
+          onClick={() => setModalOpen(true)}
+          >
+           + Add Goal
+          </button>
+          </div>
           <div className="grid grid-cols-3 gap-6">
             {goals
               .filter((goal) => !goal.completed)
@@ -183,7 +200,7 @@ const goalsPage = () => {
                     value={goal.progress}
                     text={`${goal.progress}%`}
                     styles={buildStyles({
-                      textColor: "#fff",
+                      textColor: "green",
                       pathColor: "#4caf50",
                     })}
                   />
@@ -198,12 +215,7 @@ const goalsPage = () => {
           </div>
 
           {/* Create Goal Button */}
-          <button
-            className="mt-16 px-4 py-2 bg-blue-600 text-white rounded"
-            onClick={() => setModalOpen(true)}
-          >
-            + Add Goal
-          </button>
+          
 
           {/* Create Goal Form (hidden by default) */}
           <Modal
@@ -261,15 +273,15 @@ const goalsPage = () => {
                 </div>
 
                 {/* Save Button */}
-                <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700">
-                  SAVE
+                <button type="submit" className="w-full px-4 py-2 bg-[#3b84d9] text-white font-bold rounded-4xl hover:text-[#3b84d9] hover:bg-white border hover:border-[#3b84d9]">
+                  Save
                 </button>
               </form>
             
           </Modal>
 
           {/* Completed Goals Section */}
-          <h2 className="text-xl font-semibold mt-8 mb-4">Completed Goals</h2>
+          <h2 className={`text-xl font-semibold mt-8 mb-4 text-gray-500 ${poppins.className}`}><FontAwesomeIcon icon={faCheckDouble} className="fa-fw text-[#3b84d9]"/>Completed Goals</h2>
           <div className="grid grid-cols-3 gap-6">
             {goals
               .filter((goal) => goal.completed)
