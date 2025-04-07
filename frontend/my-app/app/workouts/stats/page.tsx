@@ -1,6 +1,7 @@
 "use client";
 import Layout from "../../../components/Layout";
 //import { useWorkout } from "../../../context/WorkoutContext";
+import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,Label } from "recharts";
 

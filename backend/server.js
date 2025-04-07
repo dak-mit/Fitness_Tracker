@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const workoutRoutes = require('./routes/workouts');
 const goalsRoutes = require('./routes/Goals');
 const nutritionRoutes = require('./routes/nutrition');
+const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
 const app = express();
@@ -28,17 +29,18 @@ mongoose.connect(MONGODB_URI)
     console.log('Error connecting to MongoDB:', error.message);
   });
 
-
+app.use("/api/auth",authRoutes);
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/goals', goalsRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 
+//Testing Sample Routes
 app.get('/api/samplecall', (req, res) => {
     // Send a JSON response with a message
     res.json({ message: 'Hello World from the backend!' });
 });
 
-// Start the server and listen on the specified port
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

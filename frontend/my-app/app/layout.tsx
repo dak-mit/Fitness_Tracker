@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { MealProvider, WorkoutProvider } from "@/context/MealContext";
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
+import { MealProvider,} from "@/context/MealContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
-config.autoAddCss = false
+config.autoAddCss = false;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,8 +17,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-
 
 // ✅ Move metadata outside the component
 export const metadata: Metadata = {
@@ -35,7 +34,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MealProvider>{children}</MealProvider>
+        <AuthProvider> {/* Wrap the app with AuthProvider */}
+          <MealProvider>{children}</MealProvider>
+        </AuthProvider>
       </body>
     </html>
   );

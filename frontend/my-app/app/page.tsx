@@ -22,6 +22,15 @@ const page = () => {
     router.push('/workouts');
   };
 
+
+  const handleLoginRedirect = () => {
+    router.push("/login");
+  };
+
+  const handleRegisterRedirect = () => {
+    router.push("/signup");
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => setShowArrow(true), 1500); // adjust based on speed
     return () => clearTimeout(timer);
@@ -40,12 +49,14 @@ const page = () => {
         >
           <div className="flex space-x-4">
           <button
+              onClick={handleLoginRedirect} 
           className="px-4 py-2 font-bold rounded hover:bg-white border hover:text-[#243147]"
           >
            Login
           </button>
           <button
-          className="px-4 py-2 font-bold rounded hover:bg-white border hover:text-[#2e3d54]"
+              onClick={handleRegisterRedirect} // Redirect to /register
+              className="px-4 py-2 font-bold rounded hover:bg-white border hover:text-[#2e3d54]"
           >
            Register
           </button>
