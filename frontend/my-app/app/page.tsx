@@ -18,7 +18,6 @@ const page = () => {
   const [showArrow, setShowArrow] = useState(false);
   
 
-
   const handleRedirect = () => {
     router.push('/workouts');
   };

@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,Label
 
 // Helper function to format workouts by day and activity
 const getWeeklyCaloriesData = (workouts: any[]) => {
-  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"];
 
   // Initialize weekly data structure
   const weeklyData = daysOfWeek.map((day) => ({
@@ -34,7 +34,8 @@ const getWeeklyCaloriesData = (workouts: any[]) => {
   // Group calories burned by day and activity
   weeklyWorkouts.forEach((workout) => {
     const workoutDate = new Date(workout.date);
-    const dayIndex = workoutDate.getDay();
+    const jsDayIndex = workoutDate.getDay();
+    const dayIndex = (jsDayIndex+6)%7;
     const activity = workout.activity.toLowerCase();
 
     if (weeklyData[dayIndex][activity] !== undefined) {

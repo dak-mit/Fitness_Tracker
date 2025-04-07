@@ -15,36 +15,11 @@ const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   return (
     <div className="flex min-h-screen bg-[#f5f5f7] text-white">
-      {/* Sidebar */}
-      <nav className="w-64 p-5 bg-[#0b0e13]">
-        <h1 className="text-2xl font-bold mb-30">Fitness Tracker</h1>
-        
-        <ul className="space-y-4">
-        {[
-        { name: "Summary", path: "/workouts" },
-        { name: "Add Workout", path: "/workouts/add-workout" },
-        { name: "Goals", path: "/workouts/goals" },
-        { name: "Stats", path: "/workouts/stats" },
-      ].map((item) => (
-        <li key={item.path}>
-          <Link
-            href={item.path}
-            className={`block px-4 py-2 rounded-md duration-200 ${
-              pathname === item.path ? "bg-gray-800 font-semibold" : "hover:bg-gray-800"
-            }`}
-          >
-            {item.name}
-          </Link>
-        </li>
-      ))}
-          </ul>
-        
-      </nav>
 
       {/* Main Content */}
       <main className="flex-1 p-0">
-
-      <header className="w-full flex justify-center space-x-12 border-b border-gray-800 bg-[#0b0e13] py-4">
+              <header className="w-full flex justify-center space-x-12 border-b border-gray-800 bg-[#0b0e13] py-4">
+              <h1 className="absolute left-6 text-2xl font-bold">Fitness Tracker</h1>
           {[
             { name: "HOME" , path: "/home" },
           { name: "WORKOUTS", path: "/workouts" },

@@ -21,10 +21,9 @@ const Layout = ({ children }: LayoutProps) => {
         
         <ul className="space-y-4">
         {[
-        { name: "Summary", path: "/workouts" },
-        { name: "Add Workout", path: "/workouts/add-workout" },
-        { name: "Goals", path: "/workouts/goals" },
-        { name: "Stats", path: "/workouts/stats" },
+        { name: "Summary", path: "/nutrition" },
+        { name: "Add Meal", path: "/nutrition/add-meal" },
+        { name: "Stats", path: "/nutrition/stats" },
       ].map((item) => (
         <li key={item.path}>
           <Link
