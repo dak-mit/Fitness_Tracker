@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from "@/context/AuthContext";
+
 interface LayoutProps {
   children: ReactNode;
 }
@@ -22,7 +23,7 @@ const Layout = ({ children }: LayoutProps) => {
       <main className="flex-1 p-0">
               <header className="w-full flex justify-center space-x-12 border-b border-gray-800 bg-[#0b0e13] py-4">
               <h1 onClick={()=>router.push("/")}
-          className="absolute left-6 text-2xl font-bold cursor-pointer">Fitness Tracker</h1>
+          className="absolute left-6 text-2xl font-bold cursor-pointer">TrackTive</h1>
           {[
             { name: "HOME" , path: "/home" },
           { name: "WORKOUTS", path: "/workouts" },

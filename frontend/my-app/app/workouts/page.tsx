@@ -154,10 +154,13 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {(activeTab === "all-time" ? workouts : weeklyWorkouts).map((workout, index) => (
+                  {(activeTab === "all-time" ? workouts : weeklyWorkouts)
+                    .slice() // clone to avoid mutating original
+                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                    .map((workout, index) => (
               <tr key={index} className="border-t">
                 <td className="p-2">{new Date(workout.date).toLocaleDateString("en-GB")}</td>
-                <td className="p-2">{workout.activity}</td>
+                <td className="p-2">{workout.activity.charAt(0).toUpperCase() + workout.activity.slice(1)}</td>
                 <td className="p-2">{workout.duration} min</td>
                 <td className="p-2">{workout.calories} kcal</td>
                 <td className="p-2">

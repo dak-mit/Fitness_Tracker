@@ -67,7 +67,7 @@ const AddWorkout = () => {
           {/* Workout Name */}
           <div className="mb-4">
             <label className="block text-black-700">Workout Name <span className="text-red-700">*</span></label>
-            <input type="text" {...register("workoutName")} className="w-full p-2 border rounded" />
+            <input type="text" placeholder="e.g., Run" {...register("workoutName")} className="w-full p-2 border rounded" />
             {errors.workoutName && <p className="text-red-500 text-sm">{errors.workoutName.message}</p>}
           </div>
 
@@ -75,12 +75,12 @@ const AddWorkout = () => {
           <div className="mb-4 flex space-x-4">
             <div className="w-1/2">
               <label className="block text-black-700">Start Time <span className="text-red-700">*</span></label>
-              <input type="time" {...register("startTime")} className="w-full p-2 border rounded" />
+              <input type="time" placeholder="HH:MM" {...register("startTime")}  className="w-full p-2 border rounded" />
               {errors.startTime && <p className="text-red-500 text-sm">{errors.startTime.message}</p>}
             </div>
             <div className="w-1/2">
               <label className="block text-black-700">Date <span className="text-red-700">*</span></label>
-              <input type="date" {...register("date")} className="w-full p-2 border rounded" />
+              <input type="date" placeholder="Select date" {...register("date")} max={new Date().toISOString().split("T")[0]} className="w-full p-2 border rounded" />
               {errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
             </div>
           </div>
@@ -88,7 +88,7 @@ const AddWorkout = () => {
           {/* Activity */}
           <div className="mb-4">
             <label className="block text-black-700">Activity <span className="text-red-700">*</span></label>
-            <select {...register("activity")} className="w-full p-2 border rounded">
+            <select {...register("activity")} className="w-full p-2 border rounded ">
               <option value="">Select an activity type</option>
               <option value="run">Run</option>
               <option value="cycle">Cycle</option>
@@ -102,14 +102,14 @@ const AddWorkout = () => {
           {/* Duration */}
           <div className="mb-4">
             <label className="block text-black-700">Duration (minutes) <span className="text-red-700">*</span></label>
-            <input type="number" {...register("duration",{valueAsNumber:true})} className="w-full p-2 border rounded" />
+            <input type="number" placeholder="e.g., 30"{...register("duration",{valueAsNumber:true})} className="w-full p-2 border rounded" />
             {errors.duration && <p className="text-red-500 text-sm">{errors.duration.message}</p>}
           </div>
 
           {/* Calories */}
           <div className="mb-4">
             <label className="block text-black-700">Calories Burned (kcal)<span className="text-red-700">*</span></label>
-            <input type="number" {...register("calories",{valueAsNumber:true})} className="w-full p-2 border rounded" />
+            <input type="number" placeholder="e.g., 250"{...register("calories",{valueAsNumber:true})} className="w-full p-2 border rounded" />
             {errors.calories && <p className="text-red-500 text-sm">{errors.calories.message}</p>}
           </div>
 

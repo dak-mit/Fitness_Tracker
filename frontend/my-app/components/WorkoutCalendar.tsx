@@ -54,17 +54,17 @@ console.log('Grouped workouts:', groupedWorkouts);
       <Calendar className="custom-calendar"
         
         tileContent={({ date }) => {
-            const formattedDate = date.toISOString().split("T")[0];
+          const formattedDate = date.toLocaleDateString('en-CA');
             const workoutList = groupedWorkouts[formattedDate] || [];
             return(
             <div
-              className="flex justify-center items-center mt-5"
+              className="ml-2 mt-2 max-h-20 overflow-y-auto text-center"
             >
               {workoutList.length > 0 ? (
                   workoutList.map((workout, index) => (
-                    <span key={index} className="text-blue-600 font-semibold block text-xs">
-                      {workout}
-                    </span>
+                    <div key={index} className="text-[#3b84d9] font-semibold text-xs">
+                      {workout.charAt(0).toUpperCase() + workout.slice(1)}
+                    </div>
                   ))
                 ) : (
                   <span className="text-gray-400 text-xs"></span>

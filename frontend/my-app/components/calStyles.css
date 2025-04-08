@@ -40,9 +40,22 @@
 
 /* Style the selected day */
 .react-calendar__tile--active {
-    border: 3px solid black !important;
+    background-color: #3b84d9 !important;
+    color: white !important;
+    border: none !important;
 }
 
+.react-calendar__tile--active *{
+    color: white !important;
+}
+
+.react-calendar__tile--now {
+    background-color: #ff6969 !important; /*  */
+  }
+
+  .react-calendar__tile--now *{
+    color: white !important;
+  }
 /* Style shaded workout days */
 .workout-day {
     background-color: #d1d5db !important; /* Gray-300 */

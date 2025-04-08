@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
       {/* Sidebar */}
       <nav className="w-64 p-5 bg-[#0b0e13]">
         <h1 onClick={()=>router.push("/")}
-          className="text-2xl font-bold mb-30 cursor-pointer">Fitness Tracker</h1>
+          className="text-2xl font-bold mb-30 cursor-pointer">TrackTive</h1>
         
         <ul className="space-y-4">
         {[

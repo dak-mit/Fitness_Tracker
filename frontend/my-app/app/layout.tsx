@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 // ✅ Move metadata outside the component
 export const metadata: Metadata = {
-  title: "Fitness Tracker",
+  title: "TrackTive",
   description: "Track your workouts efficiently",
 };
 
