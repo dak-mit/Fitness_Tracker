@@ -54,9 +54,10 @@ const AddMeal = () => {
 
   return (
     <NutriLayout>
-      <h2 className="text-2xl font-bold mb-6 text-black">Add Meal</h2>
-      <div className="mt-6 bg-white text-black p-6 rounded-lg w-[600px] mx-auto">
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-lg shadow-md text-black">
+      
+      {/* <div className="mt-6 bg-white text-black p-6 rounded-lg w-[600px] mx-auto"> */}
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-[500px] mx-auto mt-20 p-6 rounded-lg shadow-md text-black">
+        <h2 className="text-2xl font-bold mb-6 text-black text-center">Add Meal</h2>
           {/* Meal Name */}
           <div className="mb-4">
             <label className="block text-black-700">Meal Name <span className="text-red-700">*</span></label>
@@ -92,13 +93,6 @@ const AddMeal = () => {
             {errors.nutrition && <p className="text-red-500 text-sm">{errors.nutrition.message}</p>}
           </div>
 
-          {/* Duration */}
-          {/* <div className="mb-4">
-            <label className="block text-black-700">Duration (minutes) <span className="text-red-700">*</span></label>
-            <input type="number" {...register("duration",{valueAsNumber:true})} className="w-full p-2 border rounded" />
-            {errors.duration && <p className="text-red-500 text-sm">{errors.duration.message}</p>}
-          </div> */}
-
           {/* Calories */}
           <div className="mb-4">
             <label className="block text-black-700">Calories Consumed (kcal)<span className="text-red-700">*</span></label>
@@ -111,7 +105,7 @@ const AddMeal = () => {
             SAVE
           </button>
         </form>
-      </div>
+      {/* </div> */}
     </NutriLayout>
   );
 };

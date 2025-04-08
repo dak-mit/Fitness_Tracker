@@ -12,12 +12,14 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const router = useRouter();
   const pathname = usePathname();
   return (
     <div className="flex min-h-screen bg-[#f5f5f7] text-white">
       {/* Sidebar */}
       <nav className="w-64 p-5 bg-[#0b0e13]">
-        <h1 className="text-2xl font-bold mb-30">Fitness Tracker</h1>
+      <h1 onClick={()=>router.push("/")}
+          className="text-2xl font-bold mb-30 cursor-pointer">Fitness Tracker</h1>
         
         <ul className="space-y-4">
         {[

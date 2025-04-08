@@ -201,7 +201,7 @@ const goalsPage = () => {
           </div>
           <div className="grid grid-cols-3 gap-6">
             {goals
-              .filter((goal) => !goal.completed)
+              .filter((goal) => !goal.completed && goal.goalTarget && goal.name && goal.goalType && goal.goalStart)
               .map((goal, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div className="w-24 h-24">
@@ -233,14 +233,11 @@ const goalsPage = () => {
             className="bg-white text-black p-6 rounded-lg w-[600px] mx-auto relative z-50"
             overlayClassName="fixed inset-0 flex justify-center items-center backdrop-blur-sm"
           >
-            <h2 className="text-2xl font-bold mb-6">Add Goal</h2>
-            <button
-              onClick={() => setModalOpen(false)}
-              className="absolute top-4 right-4 bg-red-500 w-8 h-8 rounded-full text-white hover:text-red-500 hover:bg-white border hover:border-red-500 text-2xl"
-            >
-              ×
-            </button>
-            <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-lg shadow-md text-black">
+            
+            
+            <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-[500px] mx-auto mt-10 p-6 rounded-lg shadow-md text-black">
+              <h2 className="text-2xl font-bold mb-6">Add Goal</h2>
+              
               {/* Workout Name */}
               <div className="mb-4">
                 <label className="block text-black-700">
@@ -309,17 +306,26 @@ const goalsPage = () => {
               .filter((goal) => goal.completed)
               .map((goal, index) => (
                 <div key={index} className="flex flex-col items-center">
-                  <div className="w-24 h-24">
+                  <div className=" relative w-24 h-24">
                     <CircularProgressbar
                       value={100}
-                      text="✅"
+                      
                       styles={buildStyles({
                         textColor: "#fff",
                         pathColor: "#4caf50",
                       })}
                     />
+                    <div className="absolute inset-0 flex items-center justify-center text-green-600 text-2xl">
+    <FontAwesomeIcon icon={faCheckDouble} />
+  </div>
                   </div>
-                  <p className="text-center mt-2">{goal.name}</p>
+                  <p className="text-center mt-2">
+                    {goal.goalType === "numWorkouts"
+                      ? `Complete ${goal.goalTarget} ${goal.name} ${goal.goalStart}`
+                      : goal.goalType === "calories"
+                      ? `Burn ${goal.goalTarget} calories from ${goal.goalStart} by ${goal.name}`
+                      : `Do ${goal.goalTarget} minutes of ${goal.name} ${goal.goalStart}`}
+                  </p>
                 </div>
               ))}
           </div>

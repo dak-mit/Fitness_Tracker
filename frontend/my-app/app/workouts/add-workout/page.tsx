@@ -61,9 +61,9 @@ const AddWorkout = () => {
 
   return (
     <Layout>
-      <h2 className="text-2xl font-bold mb-6 text-black">Add Workout</h2>
-      <div className="mt-6 bg-white text-black p-6 rounded-lg w-[600px] mx-auto">
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-lg shadow-md text-black">
+      {/* <div className="mt-6 bg-white text-black p-6 rounded-lg w-[600px] mx-auto"> */}
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-[500px] mx-auto mt-10 p-6 rounded-lg shadow-md text-black">
+        <h2 className="text-2xl font-bold mb-6 text-black text-center">Add Workout</h2>
           {/* Workout Name */}
           <div className="mb-4">
             <label className="block text-black-700">Workout Name <span className="text-red-700">*</span></label>
@@ -118,7 +118,7 @@ const AddWorkout = () => {
             SAVE
           </button>
         </form>
-      </div>
+      {/* </div> */}
     </Layout>
   );
 };

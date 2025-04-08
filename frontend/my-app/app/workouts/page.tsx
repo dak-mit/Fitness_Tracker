@@ -4,7 +4,8 @@ import Layout from "../../components/Layout";
 import { useEffect, useState } from "react";
 import WorkoutCalendar from "../../components/WorkoutCalendar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash,faClock,faHeart,faDumbbell,faPersonRunning } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faClock, faHeart, faDumbbell, faPersonRunning, faFire } from '@fortawesome/free-solid-svg-icons'
+import { useRouter } from "next/navigation";
 // Helper function to filter weekly workouts
 const getWeeklyWorkouts = (workouts: any[]) => {
   const currentDate = new Date();
@@ -22,6 +23,7 @@ const getWeeklyWorkouts = (workouts: any[]) => {
 
 export default function Home() {
   //const { workouts, } = useWorkout();
+  const router = useRouter();
   const [workouts, setWorkouts] = useState([]);
   const [activeTab, setActiveTab] = useState("all-time");
 
@@ -83,7 +85,6 @@ export default function Home() {
   const weeklyCalories = weeklyWorkouts.reduce((sum, w) => sum + (w.calories || 0), 0);
   const weeklyWorkoutsCount = weeklyWorkouts.length;
 
-
   return (
     <Layout>
       <div className="mt-6 bg-white text-black p-6 rounded-lg">
@@ -97,7 +98,7 @@ export default function Home() {
           </div>
 
           <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
-            <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faHeart} className="fa-fw text-[#3b84d9]"/>Calories Burned</h3>
+            <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faFire} className="fa-fw text-[#3b84d9]"/>Calories Burned</h3>
             <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalCalories : weeklyCalories} kcal</p>
           </div>
 
@@ -128,7 +129,8 @@ export default function Home() {
             Calendar View
           </button>
           <button
-          className="ml-auto px-4 py-2 bg-[#3b84d9] text-white font-bold rounded-4xl hover:text-[#3b84d9] hover:bg-white border hover:border-[#3b84d9]"
+            onClick={()=>router.push("/workouts/add-workout")}
+          className="cursor-pointer ml-auto px-4 py-2 bg-[#3b84d9] text-white font-bold rounded-4xl hover:text-[#3b84d9] hover:bg-white border hover:border-[#3b84d9]"
           >
            + Add Workout
           </button>

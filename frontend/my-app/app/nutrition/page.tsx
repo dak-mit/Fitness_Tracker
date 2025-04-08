@@ -3,7 +3,7 @@ import NutriLayout from "../../components/NutriLayout";
 //import { useMeal } from "../../context/MealContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash,faUtensils,faBurger } from "@fortawesome/free-solid-svg-icons";
 //import WorkoutCalendar from "../../components/WorkoutCalendar";
 
 // Helper function to filter weekly workouts
@@ -96,12 +96,12 @@ export default function Home() {
           </div> */}
 
           <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
-            <h3 className="text-lg font-medium">Calories Consumed</h3>
+            <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faBurger} className="fa-fw text-[#3b84d9]"/>Calories Consumed</h3>
             <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalCalories : weeklyCalories} kcal</p>
           </div>
 
           <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
-            <h3 className="text-lg font-medium">Meals</h3>
+            <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faUtensils} className="fa-fw text-[#3b84d9]"/>Meals</h3>
             <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalMeals : weeklyMealsCount}</p>
           </div>
         </div>
@@ -129,7 +129,7 @@ export default function Home() {
       <th className="p-2 text-left border-top w-1/5">Date</th>
               <th className="p-2 text-left w-1/5">Meal Type</th>
               <th className="p-2 text-left w-1/5">Meal</th>
-              <th className="p-2 text-left w-1/5">Calories consumed</th>
+              <th className="p-2 text-left w-1/5">Calories</th>
               <th className="p-2 text-left w-1/5"></th>
     </tr>
   </thead>
@@ -140,7 +140,7 @@ export default function Home() {
         <td className="p-2 w-1/5">{meal.nutrition}</td>
         <td className="p-2 w-1/5">{meal.mealName}</td>
         {/* <td className="p-2 w-1/4">{workout.duration} min</td> */}
-        <td className="p-2 w-1/5">{meal.calories} </td>
+        <td className="p-2 w-1/5">{meal.calories} kcal </td>
         <td className="p-2 w-1/5">
         <button
                     

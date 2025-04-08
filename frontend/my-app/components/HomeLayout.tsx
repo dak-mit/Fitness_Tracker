@@ -6,20 +6,23 @@ import "../app/globals.css";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
-
+import { useAuth } from "@/context/AuthContext";
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const pathname = usePathname();
+    const pathname = usePathname();
+    const router = useRouter();
+    const {logout } = useAuth();
   return (
     <div className="flex min-h-screen bg-[#f5f5f7] text-white">
 
       {/* Main Content */}
       <main className="flex-1 p-0">
               <header className="w-full flex justify-center space-x-12 border-b border-gray-800 bg-[#0b0e13] py-4">
-              <h1 className="absolute left-6 text-2xl font-bold">Fitness Tracker</h1>
+              <h1 onClick={()=>router.push("/")}
+          className="absolute left-6 text-2xl font-bold cursor-pointer">Fitness Tracker</h1>
           {[
             { name: "HOME" , path: "/home" },
           { name: "WORKOUTS", path: "/workouts" },
@@ -41,6 +44,12 @@ const Layout = ({ children }: LayoutProps) => {
           </Link>
         );
           })}
+              <button
+          onClick={logout}
+          className="absolute right-6 px-4 bg-red-500 text-white rounded hover:bg-red-700"
+        >
+          Logout
+        </button>    
       </header>
 
         <div className="p-8">{children}</div>

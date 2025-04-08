@@ -76,25 +76,29 @@ const StatsPage = () => {
 
   return (
     <Layout>
-      <div className="mt-6 bg-white text-black p-6 rounded-lg">
+      <div className="mt-6 bg-white text-black p-4 rounded-lg">
         <h2 className="text-2xl font-bold mb-4">Weekly Calories Burned</h2>
 
         {weeklyData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={weeklyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <XAxis dataKey="day">
-              <Label value="Days of the Week" offset={-3} position="insideBottom" />
+          <ResponsiveContainer width="100%" height={550}>
+            <BarChart data={weeklyData} margin={{ top: 20, right: 30, left: 20, bottom:25 }}>
+            <XAxis dataKey="day" stroke="black">
+              <Label value="Days of the Week" offset={-5} dy={10}  position="insideBottom" style={{ textAnchor: "middle",fontWeight:"bold",fill:"black" }} />
             </XAxis>
-            <YAxis>
+            <YAxis stroke="black">
               <Label
                 value="Calories Burned (kcal)"
                 angle={-90}
                 position="insideLeft"
-                style={{ textAnchor: "middle" }}
+                style={{ textAnchor: "middle",fontWeight:"bold",fill:"black" }}
               />
             </YAxis>
               <Tooltip />
-              <Legend />
+              <Legend 
+      verticalAlign="top" 
+      align="center" 
+      wrapperStyle={{ marginBottom: 20 }} // ⬅️ Optional spacing tweak
+    />
               
               <Bar dataKey="run" fill="#82ca9d" name="Run" />
               <Bar dataKey="cycle" fill="#8884d8" name="Cycle" />

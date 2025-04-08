@@ -2,8 +2,11 @@
 import HomeLayout from '../../components/HomeLayout';
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { faCarrot, faClock, faDumbbell, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
+    const router = useRouter();
     return (
         <HomeLayout>
 <div className="mt-6 bg-white text-black p-6 rounded-lg">
@@ -13,7 +16,7 @@ export default function Home() {
     {/* User Info Box */}
     <div className="p-6 bg-[#f9fafa] rounded-lg shadow">
       <h3 className="text-lg font-semibold mb-4">
-        <FontAwesomeIcon icon={faClock} className="fa-fw text-[#3b84d9] mr-2" />
+        <FontAwesomeIcon icon={faUser} className="fa-fw text-[#3b84d9] mr-2" />
         User Info
       </h3>
       <div className="space-y-2">
@@ -26,7 +29,7 @@ export default function Home() {
     {/* Workout Summary Box */}
     <div className="p-6 bg-[#f9fafa] rounded-lg shadow">
       <h3 className="text-lg font-semibold mb-4">
-        <FontAwesomeIcon icon={faClock} className="fa-fw text-[#3b84d9] mr-2" />
+        <FontAwesomeIcon icon={faDumbbell} className="fa-fw text-[#3b84d9] mr-2" />
         Workout Summary
       </h3>
       <div className="space-y-2">
@@ -38,7 +41,7 @@ export default function Home() {
     {/* Nutrition Summary Box */}
     <div className="p-6 bg-[#f9fafa] rounded-lg shadow">
       <h3 className="text-lg font-semibold mb-4">
-        <FontAwesomeIcon icon={faClock} className="fa-fw text-[#3b84d9] mr-2" />
+        <FontAwesomeIcon icon={faCarrot} className="fa-fw text-[#3b84d9] mr-2" />
         Nutrition Summary
       </h3>
       <div className="space-y-2">
@@ -46,7 +49,17 @@ export default function Home() {
         <p><span className="text-2xl font-bold">12450</span> <br />Calories Consumed</p>
       </div>
     </div>
-  </div>
+    
+                </div>
+                <div className="text-center mt-4">
+                    <button
+                        onClick={()=>router.push("/workouts")}
+    className="px-6 py-3 bg-[#3b84d9] text-white font-bold rounded-4xl hover:text-[#3b84d9] hover:bg-white border hover:border-[#3b84d9] transition"
+  >
+    View Progress
+  </button>
+</div>
+                
 </div>
 
         </HomeLayout>
