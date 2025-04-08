@@ -1,5 +1,4 @@
 "use client";
-import Layout from "../../../components/Layout";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -32,7 +31,7 @@ export default function Login() {
       
       const data = await response.json();
       login(data.token); // Set token in context
-      router.push("/workouts/goals"); // Redirect to goals page
+      router.push("/home"); 
     } catch (err) {
       setError(err.message || "Invalid credentials");
     } finally {

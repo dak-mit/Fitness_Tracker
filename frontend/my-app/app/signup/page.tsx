@@ -44,7 +44,7 @@ export default function Signup() {
       
       const loginData = await loginResponse.json();
       login(loginData.token); // Set token in context
-      router.push("/workouts/goals"); // Redirect to goals page
+      router.push("/home"); // Redirect to goals page
     } catch (err) {
       setError(err.message || "An error occurred");
     } finally {

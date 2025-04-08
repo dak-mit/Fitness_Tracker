@@ -19,7 +19,7 @@ const page = () => {
   
 
   const handleRedirect = () => {
-    router.push('/workouts');
+    router.push('/home');
   };
 
 

@@ -46,7 +46,12 @@ const Layout = ({ children }: LayoutProps) => {
         );
           })}
               <button
-          onClick={logout}
+            onClick={() => {
+              console.log("Logout clicked");
+              logout();
+              router.push("/login");
+            }}
+            
           className="absolute right-6 px-4 bg-red-500 text-white rounded hover:bg-red-700"
         >
           Logout

@@ -6,6 +6,7 @@ import "../app/globals.css";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { useAuth } from "@/context/AuthContext";
 
 
 interface LayoutProps {
@@ -15,6 +16,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   const router = useRouter();
+  const { logout } = useAuth();
   return (
     <div className="flex min-h-screen bg-[#f5f5f7] text-white">
       {/* Sidebar */}
@@ -69,6 +71,17 @@ const Layout = ({ children }: LayoutProps) => {
           </Link>
         );
           })}
+          <button
+            onClick={() => {
+              console.log("Logout clicked");
+              logout();
+              router.push("/login");
+            }}
+            
+          className="absolute right-6 px-4 bg-red-500 text-white rounded hover:bg-red-700"
+        >
+          Logout
+        </button>   
       </header>
 
         <div className="p-8">{children}</div>
