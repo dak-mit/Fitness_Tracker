@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import NutriLayout from "../../../components/NutriLayout";
-import { useMeal } from "../../../context/MealContext";
+//import { useMeal } from "../../../context/MealContext";
 import { useRouter } from "next/navigation";
 
 // Zod Schema
@@ -32,6 +32,7 @@ const AddMeal = () => {
     try{
      const response = await fetch("http://localhost:4000/api/nutrition", {
        method: "POST",
+       credentials:"include",
        headers: {
          "Content-Type": "application/json",
        },

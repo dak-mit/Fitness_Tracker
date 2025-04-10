@@ -6,7 +6,7 @@ import "../app/globals.css";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
-import { useAuth } from "@/context/AuthContext";
+//import { useAuth } from "@/context/AuthContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,7 +15,23 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { logout } = useAuth();
+  const handleLogout = async () => {
+    try{
+      const res = await fetch("http://localhost:4000/api/auth/logout",{
+        method: "POST",
+        credentials:"include",
+      });
+
+      if(!res.ok){
+        throw new Error("Failed to logout");
+      }
+
+      router.push("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+      alert("Failed to log out");
+    }
+  };
   return (
     <div className="flex min-h-screen bg-[#f5f5f7] text-white">
       {/* Sidebar */}
@@ -72,7 +88,7 @@ const Layout = ({ children }: LayoutProps) => {
           <button
             onClick={() => {
               console.log("Logout clicked");
-              logout();
+              handleLogout();
               router.push("/login");
             }}
             

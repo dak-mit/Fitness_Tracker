@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { MealProvider,} from "@/context/MealContext";
-import { AuthProvider } from "@/context/AuthContext";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
@@ -34,9 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider> {/* Wrap the app with AuthProvider */}
-          <MealProvider>{children}</MealProvider>
-        </AuthProvider>
+        <MealProvider>{children}</MealProvider>
       </body>
     </html>
   );

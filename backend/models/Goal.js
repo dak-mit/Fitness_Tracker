@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const goalSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
     name : {type : String, required : true},
     goalType: {type: String, required: true, enum:['numWorkouts', 'duration', 'calories']},
     goalTarget: { type: Number, required: true},

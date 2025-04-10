@@ -108,8 +108,8 @@ const goalsPage = () => {
       setError(null);
       try {
         const goalsResponse = await fetch("http://localhost:4000/api/goals", {
-          "method": "GET",
-
+          method: "GET",
+          credentials:"include",
 
         });
         if (!goalsResponse.ok) {
@@ -118,7 +118,10 @@ const goalsPage = () => {
         const goalsData = await goalsResponse.json();
         console.log("Fetched goals:", goalsData);
 
-        const workoutsResponse = await fetch("http://localhost:4000/api/workouts");
+        const workoutsResponse = await fetch("http://localhost:4000/api/workouts",{
+          credentials:"include",
+        });
+
         if (!workoutsResponse.ok) {
           throw new Error("Failed to fetch workouts");
         }
@@ -158,6 +161,7 @@ const goalsPage = () => {
     try {
       const response = await fetch("http://localhost:4000/api/goals", {
         method: "POST",
+        credentials:"include",
         headers: {"Content-Type" : "application/json"},
         body: JSON.stringify(newGoal),
       });

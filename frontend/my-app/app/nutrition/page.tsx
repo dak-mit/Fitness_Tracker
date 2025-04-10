@@ -34,7 +34,9 @@ export default function Home() {
 
   const fetchNutritions = async()=>{
     try {
-      const response = await fetch('http://localhost:4000/api/nutrition');
+      const response = await fetch('http://localhost:4000/api/nutrition',{
+        credentials:"include"
+      });
       if(!response.ok){
         throw new Error('Failed to fetch meals')
       }
@@ -57,6 +59,7 @@ export default function Home() {
   try {
     const response = await fetch(`http://localhost:4000/api/nutrition/${id}`, {
       method: 'DELETE',
+      credentials:"include"
     });
 
     if (!response.ok) {

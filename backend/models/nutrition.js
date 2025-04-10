@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const nutriSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     mealName: {
         type: String,
         required: true
