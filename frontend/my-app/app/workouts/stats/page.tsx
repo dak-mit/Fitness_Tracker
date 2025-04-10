@@ -1,7 +1,5 @@
 "use client";
 import Layout from "../../../components/Layout";
-//import { useWorkout } from "../../../context/WorkoutContext";
-import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,Label } from "recharts";
 
@@ -54,7 +52,10 @@ const StatsPage = () => {
   useEffect(() => {
     const fetchWorkouts = async() =>{
       try {
-        const response = await fetch('http://localhost:4000/api/workouts');
+        const response = await fetch('http://localhost:4000/api/workouts',{
+          credentials:"include",
+        });
+
         if(!response.ok){
           throw new Error('Failed to fetch workouts')
         }

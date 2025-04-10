@@ -36,7 +36,9 @@ export default function Home() {
 
   const fetchWorkouts = async()=>{
     try {
-      const response = await fetch('http://localhost:4000/api/workouts');
+      const response = await fetch("http://localhost:4000/api/workouts", {
+        credentials: "include", 
+      });
       if(!response.ok){
         throw new Error('Failed to fetch workouts')
       }
@@ -59,6 +61,7 @@ export default function Home() {
   try {
     const response = await fetch(`http://localhost:4000/api/workouts/${id}`, {
       method: 'DELETE',
+      credentials: "include",
     });
 
     if (!response.ok) {

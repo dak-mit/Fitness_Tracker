@@ -7,7 +7,8 @@ const createNutrition = async (req, res) => {
             mealName,
             date,
             nutrition,
-            calories
+            calories,
+            user: req.user
         });
         await NutritionData.save();
         res.status(201).json({ message: 'Nutrition added successfully' , NutritionData});
@@ -18,7 +19,7 @@ const createNutrition = async (req, res) => {
 
 const getNutritions = async(req,res) => {
     try {
-        const nutritions = await Nutrition.find();
+        const nutritions = await Nutrition.find({ user: req.user }).sort({ createdAt: -1 });
         res.json(nutritions);
 
     } catch (error) {
@@ -29,8 +30,8 @@ const getNutritions = async(req,res) => {
 const deleteNutrition = async(req,res) => {
     try{
         const { id } = req.params;
-        const nutrition = await Nutrition.findByIdAndDelete(id);
-        if(!nutrition) {
+        const nutrition = await Nutrition.findByIdAndDelete({ _id: id, user: req.user });
+        if(!nutrition) {    
             return res.status(404).json({ message: 'Nutrition not found' });
         }
         res.status(200).json({ message: 'Nutrition deleted successfully' });

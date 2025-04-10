@@ -10,7 +10,8 @@ const createWorkout =   async (req, res) => {
             date,
             activity,
             duration,
-            calories
+            calories,
+            user: req.user,
         });
         await WorkoutData.save();
         res.status(201).json({ message: 'Workout added successfully' , WorkoutData});
@@ -21,7 +22,7 @@ const createWorkout =   async (req, res) => {
 
 const getWorkouts = async(req,res) => {
     try {
-        const workouts = await Workout.find();
+        const workouts = await Workout.find({ user: req.user }).sort({ createdAt: -1 });
         res.json(workouts);
 
     } catch (error) {
@@ -33,7 +34,7 @@ const getWorkouts = async(req,res) => {
 const deleteWorkout = async(req,res) => {
     try{
         const { id } = req.params;
-        const workout = await Workout.findByIdAndDelete(id);
+        const workout = await Workout.findByIdAndDelete({ _id: id, user: req.user });
         if(!workout) {
             return res.status(404).json({ message: 'Workout not found' });
         }

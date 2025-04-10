@@ -6,14 +6,20 @@ const dotenv = require('dotenv');
 const workoutRoutes = require('./routes/workouts');
 const goalsRoutes = require('./routes/Goals');
 const nutritionRoutes = require('./routes/nutrition');
+const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+const corsOptions = {
+  origin: "http://localhost:3000", 
+  credentials: true, 
+};
+app.use(cors(corsOptions));
 
+app.use(express.json());
+app.use(cookieParser());
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT ;

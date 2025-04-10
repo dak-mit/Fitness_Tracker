@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Layout from "../../../components/Layout";
-import { useAuth } from "@/context/AuthContext";
 //import { useWorkout } from "../../../context/MealContext";
 import { useRouter } from "next/navigation";
 
@@ -39,6 +38,7 @@ const AddWorkout = () => {
     try{
      const response = await fetch("http://localhost:4000/api/workouts", {
        method: "POST",
+       credentials: "include",
        headers: {
          "Content-Type": "application/json",
        },

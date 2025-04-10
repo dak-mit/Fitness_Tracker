@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
 export default function Login() {
@@ -9,7 +8,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,18 +19,17 @@ export default function Login() {
       const response = await fetch("http://localhost:4000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // 🔐 Important to receive cookie
         body: JSON.stringify({ email, password }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         throw new Error(errorData?.message || "Login failed");
       }
-      
-      const data = await response.json();
-      login(data.token); // Set token in context
-      router.push("/home"); 
-    } catch (err) {
+
+      router.push("/workouts");
+    } catch (err: any) {
       setError(err.message || "Invalid credentials");
     } finally {
       setIsLoading(false);
@@ -46,13 +43,13 @@ export default function Login() {
           <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
           <p className="text-gray-600 mt-2">Sign in to continue to your account</p>
         </div>
-        
+
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
             <p className="text-red-700">{error}</p>
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-black font-medium mb-2">Email</label>
@@ -65,7 +62,7 @@ export default function Login() {
               required
             />
           </div>
-          
+
           <div className="mb-6">
             <label className="block text-black font-medium mb-2">Password</label>
             <input
@@ -77,19 +74,19 @@ export default function Login() {
               required
             />
           </div>
-          
-          <button 
-            type="submit" 
-            className={`w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+
+          <button
+            type="submit"
+            className={`w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
             disabled={isLoading}
           >
-            {isLoading ? 'Signing In...' : 'Sign In'}
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
-          
+
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Don't have an account?{" "}
-              <Link href="./signup" className="text-blue-600 font-medium hover:underline">
+              <Link href="/signup" className="text-blue-600 font-medium hover:underline">
                 Sign up
               </Link>
             </p>
