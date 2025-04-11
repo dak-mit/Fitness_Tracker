@@ -12,25 +12,27 @@ export default function Home() {
     const [workouts, setWorkouts] = useState<any[]>([]);
     const [meals, setMeals] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [aiResponse, setAIResponse] = useState("");
+    const [loadingAI, setLoadingAI] = useState(false);
 
     useEffect(()=> {
       const fetchAll = async() => {
         try{
-          const [userRes, workoutRes, goalsRes] = await Promise.all([
+          const [userRes, workoutRes, mealRes] = await Promise.all([
             fetch("http://localhost:4000/api/auth/me",{credentials:"include"}),
             fetch("http://localhost:4000/api/workouts",{credentials:"include"}),
-            fetch("http://localhost:4000/api/goals",{credentials:"include"}),
+            fetch("http://localhost:4000/api/nutrition",{credentials:"include"}),
           ]);
 
-          if(!userRes.ok || !workoutRes.ok || !goalsRes.ok){
+          if(!userRes.ok || !workoutRes.ok || !mealRes.ok){
             throw new Error("Failed to fetch data");
           }
           const userData = await userRes.json();
           const workoutsData = await workoutRes.json();
-          const goalsData = await goalsRes.json();
+          const mealData = await mealRes.json();
           setUser(userData);
           setWorkouts(workoutsData);
-          setMeals(goalsData);
+          setMeals(mealData);
         } catch (err) {
           console.error("Failed to fetch home data:", err);
           router.push("/login"); // optional redirect if needed
@@ -51,7 +53,36 @@ export default function Home() {
     };
 
 
-
+    const handleAIRequest = async () => {
+      setLoadingAI(true);
+      setAIResponse("");
+    
+      try {
+        const [userRes, workoutRes, nutritionRes] = await Promise.all([
+          fetch("http://localhost:4000/api/auth/me", { credentials: "include" }),
+          fetch("http://localhost:4000/api/workouts", { credentials: "include" }),
+          fetch("http://localhost:4000/api/nutrition", { credentials: "include" }),
+        ]);
+    
+        const user = await userRes.json();
+        const workouts = await workoutRes.json();
+        const nutrition = await nutritionRes.json();
+    
+        const res = await fetch("http://localhost:4000/api/ai/recommendations", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user, workouts, nutrition }),
+        });
+    
+        const data = await res.json();
+        setAIResponse(data.message);
+      } catch (err) {
+        setAIResponse("Something went wrong. Please try again.");
+      } finally {
+        setLoadingAI(false);
+      }
+    };
 
     return (
         <HomeLayout>
@@ -105,7 +136,29 @@ export default function Home() {
     View Progress
   </button>
 </div>
-                
+  <div className="text-center mt-4 space-y-6">
+    <button
+      onClick={handleAIRequest}
+      disabled={loadingAI}
+      className="px-6 py-3 bg-[#3b84d9] text-white font-bold rounded-4xl hover:text-[#3b84d9] hover:bg-white border hover:border-[#3b84d9] transition"
+    >
+      {loadingAI ? "Generating Advice..." : "Get AI Suggestion"}
+    </button>
+
+    {aiResponse && (
+  <div className="max-w-3xl mx-auto mt-6 bg-white border border-blue-200 p-6 rounded-lg shadow text-gray-800 leading-relaxed">
+    <h3 className="text-xl font-semibold text-blue-600 mb-4 flex items-center justify-center gap-2">
+      <span role="img" aria-label="brain">🧠</span> AI Recommendation
+    </h3>
+
+    {/* Format the response to preserve line breaks */}
+    <div className="text-[16px] font-normal whitespace-pre-line">
+      {aiResponse.replace(/\*\*/g, "")}
+    </div>
+  </div>
+)}
+
+  </div>        
 </div>
 
         </HomeLayout>
