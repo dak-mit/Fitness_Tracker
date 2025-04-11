@@ -9,6 +9,7 @@ const nutritionRoutes = require('./routes/nutrition');
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const leaderboard = require("./routes/leaderboard");
 
 dotenv.config();
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/workouts', workoutRoutes);
 app.use('/api/goals', goalsRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/leaderboard", leaderboard);
 
 //Testing Sample Routes
 app.get('/api/samplecall', (req, res) => {
