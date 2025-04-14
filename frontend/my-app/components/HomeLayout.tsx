@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import "../app/globals.css";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightFromBracket, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 interface LayoutProps {
   children: ReactNode;
@@ -68,13 +68,13 @@ const Layout = ({ children }: LayoutProps) => {
               router.push("/login");
             }}
             
-          className="absolute right-6 px-4 bg-red-500 text-white rounded hover:bg-red-700"
+          className="absolute right-6 p-1 bg-red-500 text-white rounded hover:bg-red-700"
         >
-          Logout
+          <FontAwesomeIcon icon={faArrowRightFromBracket} className="fa-fw"/>
         </button>    
       </header>
 
-        <div className="p-8">{children}</div>
+        <div>{children}</div>
       </main>
     </div>
   );

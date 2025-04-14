@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import { useEffect, useState } from "react";
 import WorkoutCalendar from "../../components/WorkoutCalendar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faClock, faHeart, faDumbbell, faPersonRunning, faFire } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faClock, faHeart, faDumbbell, faPersonRunning, faFire, faPersonBiking, faPersonSwimming, faHandsPraying } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from "next/navigation";
 // Helper function to filter weekly workouts
 const getWeeklyWorkouts = (workouts: any[]) => {
@@ -173,12 +173,19 @@ export default function Home() {
                     .map((workout, index) => (
               <tr key={index} className="border-t">
                 <td className="p-2">{new Date(workout.date).toLocaleDateString("en-GB")}</td>
-                <td className="p-2">{workout.activity.charAt(0).toUpperCase() + workout.activity.slice(1)}</td>
+                <td className="p-2 flex items-center gap-2">
+          {workout.activity === "run" && <FontAwesomeIcon icon={faPersonRunning} className="fa-fw text-[#3b84d9]" />}
+          {workout.activity === "cycle" && <FontAwesomeIcon icon={faPersonBiking} className="fa-fw text-[#3b84d9]" />}
+          {workout.activity === "swim" && <FontAwesomeIcon icon={faPersonSwimming} className="fa-fw text-[#3b84d9]" />}
+          {workout.activity === "weightlifting" && <FontAwesomeIcon icon={faDumbbell} className="fa-fw text-[#3b84d9]" />}
+          {workout.activity === "yoga" && <FontAwesomeIcon icon={faHandsPraying} className="fa-fw text-[#3b84d9]" />}
+          
+          {workout.activity.charAt(0).toUpperCase() + workout.activity.slice(1)}
+        </td>
                 <td className="p-2">{workout.duration} min</td>
                 <td className="p-2">{workout.calories} kcal</td>
                 <td className="p-2">
                   <button
-                    
                     onClick={() => handleDelete(workout._id)}
                     disabled={isDeleting}
                   >

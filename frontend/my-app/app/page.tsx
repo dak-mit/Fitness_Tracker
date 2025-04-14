@@ -97,7 +97,7 @@ const page = () => {
           
       </div>
       </h1>
-      {showArrow && (
+      {/* {showArrow && (
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,7 +107,7 @@ const page = () => {
         >
           <div className="animate-bounce text-5xl"><FontAwesomeIcon icon={faCircleRight} className='fa-fw'/></div>
         </motion.div>
-      )}
+      )} */}
 
       </div>
       

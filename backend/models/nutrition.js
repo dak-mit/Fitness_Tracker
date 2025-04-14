@@ -18,7 +18,7 @@ const nutriSchema = new mongoose.Schema({
     nutrition: {
         type: String,
         required: true,
-        enum: ['Breakfast', 'Lunch', 'Dinner', 'Evening', 'Other']
+        enum: ['Breakfast', 'Lunch', 'Dinner', 'Snacks', 'Other']
     },
     
     calories: {

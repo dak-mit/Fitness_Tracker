@@ -50,28 +50,25 @@ const goalsPage = () => {
 
   const calculateProgress = (goal, workouts) => {
     let startDate;
-    const today = new Date();
-    if (goal.goalStart === "This week") {
-      startDate = new Date(today);
-      const day = today.getDay();  // 0=Sun, 1=Mon, ..., 6=Sat
-      const diffToMonday = (day === 0 ? -6 : 1) - day; 
-      startDate.setDate(today.getDate() + diffToMonday);
-      
-    } else if (goal.goalStart === "Next week") {
-      startDate = new Date(today);
-      const day = today.getDay();
-      const diffToMonday = (day === 0 ? -6 : 1) - day;
-      startDate.setDate(today.getDate() + diffToMonday + 7); // Next week's Monday
-      
-    } else {
-      startDate = new Date(goal.createdAt || today);
-    }
+  const today = new Date();
+  const day = today.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  const diffToMonday = (day === 0 ? -6 : 1) - day;
+
+  if (goal.goalStart === "This week") {
+    startDate = new Date(today); // Clone today
+    startDate.setDate(startDate.getDate() + diffToMonday); // Move to Monday
+  } else if (goal.goalStart === "Next week") {
+    startDate = new Date(today);
+    startDate.setDate(startDate.getDate() + diffToMonday + 7); // Next Monday
+  } else {
+    startDate = new Date(goal.createdAt || today);
+  }
     
 
     const relevantWorkouts = workouts.filter((workout) => {
       const workoutDate = new Date(workout.date);
       return (
-        workout.workoutName.toLowerCase().includes(goal.name.toLowerCase()) &&
+        workout.workoutName.toLowerCase().includes(goal.workoutName.toLowerCase()) &&
         workoutDate >= startDate
       );
     });
@@ -333,10 +330,10 @@ const goalsPage = () => {
           </div>
           <p className="text-sm text-gray-700">
             {goal.goalType === "numWorkouts"
-              ? `Complete ${goal.goalTarget} ${goal.name} ${goal.goalStart}`
+              ? `Complete ${goal.goalTarget} ${goal.workoutName} ${goal.goalStart}`
               : goal.goalType === "calories"
-              ? `Burn ${goal.goalTarget} calories from ${goal.goalStart} by ${goal.name}`
-              : `Do ${goal.goalTarget} minutes of ${goal.name} ${goal.goalStart}`}
+              ? `Burn ${goal.goalTarget} calories from ${goal.goalStart} by ${goal.workoutName}`
+              : `Do ${goal.goalTarget} minutes of ${goal.workoutName} ${goal.goalStart}`}
           </p>
         </div>
       ))}

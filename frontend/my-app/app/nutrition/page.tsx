@@ -3,7 +3,7 @@ import NutriLayout from "../../components/NutriLayout";
 //import { useMeal } from "../../context/MealContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash,faUtensils,faBurger } from "@fortawesome/free-solid-svg-icons";
+import { faTrash,faUtensils,faBurger, faEgg, faCookie, faBowlRice, faWineGlass, faPlateWheat, faBowlFood } from "@fortawesome/free-solid-svg-icons";
 //import WorkoutCalendar from "../../components/WorkoutCalendar";
 
 // Helper function to filter weekly workouts
@@ -140,16 +140,18 @@ export default function Home() {
     {(activeTab === "all-time" ? meals : weeklyMeals).map((meal, index) => (
       <tr key={index} className="border-t">
         <td className="p-2 w-1/5">{new Date(meal.date).toLocaleDateString("en-GB")}</td>
-        <td className="p-2 w-1/5">{meal.nutrition}</td>
+        <td className="p-2 w-1/5 flex items-center gap-2">
+          {meal.nutrition === "Breakfast" && <FontAwesomeIcon icon={faEgg} className="fa-fw text-[#3b84d9]" />}
+          {meal.nutrition === "Lunch" && <FontAwesomeIcon icon={faUtensils} className="fa-fw text-[#3b84d9]" />}
+          {meal.nutrition === "Dinner" && <FontAwesomeIcon icon={faWineGlass} className="fa-fw text-[#3b84d9]" />}
+          {meal.nutrition === "Snacks" && <FontAwesomeIcon icon={faCookie} className="fa-fw text-[#3b84d9]" />}
+          {meal.nutrition === "Others" && <FontAwesomeIcon icon={faBowlFood} className="fa-fw text-[#3b84d9]" />}
+          {meal.nutrition.charAt(0).toUpperCase()+meal.nutrition.slice(1)}
+        </td>
         <td className="p-2 w-1/5">{meal.mealName}</td>
-        {/* <td className="p-2 w-1/4">{workout.duration} min</td> */}
         <td className="p-2 w-1/5">{meal.calories} kcal </td>
         <td className="p-2 w-1/5">
-        <button
-                    
-                    onClick={() => handleDelete(meal._id)}
-                    disabled={isDeleting}
-                  >
+        <button onClick={() => handleDelete(meal._id)} disabled={isDeleting}>
                     {isDeleting ? 'Deleting...' : <FontAwesomeIcon icon={faTrash} className="fa-fw"/>}
           </button>
         </td>

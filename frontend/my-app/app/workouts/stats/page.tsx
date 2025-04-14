@@ -87,7 +87,7 @@ const StatsPage = () => {
 
   return (
     <Layout>
-      <div className="mt-6 bg-white text-black p-4 rounded-lg">
+      <div className="mt-5 ml-5 mr-5 bg-white text-black p-4 rounded-lg">
         <h2 className="text-2xl font-bold mb-4">Weekly Calories Burned</h2>
 
         {weeklyData.length > 0 ? (

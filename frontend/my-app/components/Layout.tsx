@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import "../app/globals.css";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightFromBracket, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 //import { useAuth } from "@/context/AuthContext";
 
 
@@ -93,9 +93,9 @@ const Layout = ({ children }: LayoutProps) => {
               handleLogout();
             }}
             
-          className="absolute right-6 px-4 bg-red-500 text-white rounded hover:bg-red-700"
+          className="absolute right-6 p-1 bg-red-500 text-white rounded hover:bg-red-700"
         >
-          Logout
+          <FontAwesomeIcon icon={faArrowRightFromBracket} className="fa-fw"/>
         </button>   
       </header>
 

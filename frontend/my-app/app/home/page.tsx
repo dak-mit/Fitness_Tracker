@@ -2,7 +2,7 @@
 import HomeLayout from '../../components/HomeLayout';
 import React,{ useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCarrot, faClock, faDumbbell, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCarrot, faCircleNodes, faClock, faDumbbell, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import { error } from 'console';
 
@@ -86,7 +86,7 @@ export default function Home() {
 
     return (
         <HomeLayout>
-<div className="mt-6 bg-white text-black p-6 rounded-lg">
+<div className="mt-5 ml-5 mr-5 mb-5 bg-white text-black p-6 rounded-lg">
   <h2 className="text-3xl font-bold mb-6 text-center">Welcome, {user?.firstName} {user?.lastName}</h2>
 
   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6 text-center">
@@ -99,7 +99,24 @@ export default function Home() {
       <div className="space-y-2">
         <p><span className="font-medium">Age:</span> <span className="text-xl font-bold">{user?.age}</span></p>
         <p><span className="font-medium">Weight:</span> <span className="text-xl font-bold">{user?.weight}</span> kg</p>
-        <p><span className="font-medium">Height:</span> <span className="text-xl font-bold">{user?.height}</span> cm</p>
+                <p><span className="font-medium">Height:</span> <span className="text-xl font-bold">{user?.height}</span> cm</p>
+                {user?.weight && user?.height && (() => {
+    const bmi = user.weight / ((user.height / 100) ** 2);
+
+    let category = "";
+    if (bmi < 18.5) category = "Underweight";
+    else if (bmi >= 18.5 && bmi < 25) category = "Normal";
+    else if (bmi >= 25 && bmi < 30) category = "Overweight";
+    else category = "Obese";
+
+    return (
+      <p>
+        <span className="font-medium">BMI:</span>{" "}
+        <span className="text-xl font-bold">{bmi.toFixed(2)}</span>{" "}
+        <span className="text-gray-600">({category})</span>
+      </p>
+    );
+  })()}
       </div>
     </div>
 
@@ -136,7 +153,7 @@ export default function Home() {
     View Progress
   </button>
 </div>
-  <div className="text-center mt-4 space-y-6">
+  <div className="text-center mt-4 space-y-3 flex flex-col items-center gap-4">
     <button
       onClick={handleAIRequest}
       disabled={loadingAI}
@@ -146,9 +163,9 @@ export default function Home() {
     </button>
 
     {aiResponse && (
-  <div className="max-w-3xl mx-auto mt-6 bg-white border border-blue-200 p-6 rounded-lg shadow text-gray-800 leading-relaxed">
-    <h3 className="text-xl font-semibold text-blue-600 mb-4 flex items-center justify-center gap-2">
-      <span role="img" aria-label="brain">🧠</span> AI Recommendation
+  <div className="p-6 bg-[#f9fafa] rounded-lg shadow w-[600px] ">
+    <h3 className="text-xl font-semibold mb-4 flex items-center justify-center gap-2">
+      <FontAwesomeIcon icon={faCircleNodes} className='text-[#3b84d9] fa-fw'/> AI Recommendation
     </h3>
 
     {/* Format the response to preserve line breaks */}
