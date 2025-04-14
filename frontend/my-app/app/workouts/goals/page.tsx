@@ -65,13 +65,18 @@ const goalsPage = () => {
   }
     
 
-    const relevantWorkouts = workouts.filter((workout) => {
-      const workoutDate = new Date(workout.date);
-      return (
-        workout.workoutName.toLowerCase().includes(goal.workoutName.toLowerCase()) &&
-        workoutDate >= startDate
-      );
-    });
+  const relevantWorkouts = workouts.filter((workout) => {
+    const workoutDate = new Date(workout.date);
+    workoutDate.setHours(0, 0, 0, 0);
+  
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+  
+    return (
+      workout.workoutName.trim().toLowerCase() === goal.workoutName.trim().toLowerCase() &&
+      workoutDate >= start
+    );
+  });
 
     let progress = 0;
     if (goal.goalType === "numWorkouts") {
@@ -87,6 +92,15 @@ const goalsPage = () => {
 
     progress = Math.min(Math.round(progress), 100);
     const completed = progress >= 100;
+
+    console.log(
+      "Looking for goal:", goal.workoutName,
+      "against workouts:", workouts.map(w => w.workoutName)
+    );
+    console.log("Raw:", workouts[0].date, "Parsed:", new Date(workouts[0].date));
+
+    //console.log("Goal:", goal.workoutName, "Progress:", progress, "%", "Relevant Workouts:", relevantWorkouts);
+    console.log("Workout Date:", workouts[0].date, "Parsed:", new Date(workouts[0].date), "Start:", startDate);
 
     return {
       ...goal,
@@ -131,7 +145,14 @@ const goalsPage = () => {
         }
         const workoutsData = await workoutsResponse.json();
 
-        const updatedGoals = goalsData.map((goal) => calculateProgress(goal, workoutsData));
+        const normalizedGoals = goalsData.map((goal) => ({
+          ...goal,
+          workoutName: goal.name, // 🔥 Normalize for consistent access
+        }));
+        
+        const updatedGoals = normalizedGoals.map((goal) =>
+          calculateProgress(goal, workoutsData)
+        );
         setGoals(updatedGoals);
         setWorkouts(workoutsData);
       } catch (error) {
