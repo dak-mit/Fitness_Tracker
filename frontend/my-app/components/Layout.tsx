@@ -2,6 +2,8 @@
 "use client";
 import Link from "next/link";
 import { ReactNode } from "react";
+import React from "react";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import "../app/globals.css";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -37,9 +39,18 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="flex min-h-screen bg-[#f5f5f7] text-white">
       {/* Sidebar */}
       <nav className="w-64 p-5 bg-[#0b0e13]">
+        <div className="flex items-center gap-2 mb-30">
+          <div className="w-8 h-8">
+      <DotLottieReact
+      src="/animations/workoutanimation.lottie"
+      loop
+              autoplay
+              style={{ width: '100%', height: '100%' }}
+            />
+            </div>
         <h1 onClick={()=>router.push("/")}
-          className="text-2xl font-bold mb-30 cursor-pointer">TrackTive</h1>
-        
+          className="text-2xl font-bold cursor-pointer">TrackTive</h1>
+        </div>
         <ul className="space-y-4">
         {[
         { name: "Summary", path: "/workouts" },

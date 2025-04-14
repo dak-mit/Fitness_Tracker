@@ -88,7 +88,7 @@ export default function Home() {
 
   return (
     <NutriLayout>
-      <div className="mt-6 bg-white text-black p-6 rounded-lg">
+      <div className="m-5 bg-white text-black p-6 rounded-lg">
         <h2 className="text-2xl font-bold mb-4">Nutrition Summary</h2>
 
         {/* Fitness Summary */}

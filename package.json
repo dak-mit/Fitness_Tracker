@@ -4,6 +4,7 @@
     "@emotion/styled": "^11.14.0",
     "@heroui/progress": "^2.2.12",
     "@heroui/react": "^2.7.5",
+    "@lottiefiles/dotlottie-react": "^0.13.3",
     "@mui/material": "^7.0.1",
     "@radix-ui/react-dialog": "^1.1.7",
     "@radix-ui/react-dropdown-menu": "^2.1.7",
