@@ -18,16 +18,26 @@ const getWeeklyCaloriesData = (workouts: any[]) => {
   }));
 
   const currentDate = new Date();
-  const currentWeekStart = new Date(currentDate);
-  currentWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
 
-  const currentWeekEnd = new Date(currentWeekStart);
-  currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+// Calculate Monday of current week
+const currentWeekStart = new Date(currentDate);
+const day = currentDate.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+const diffToMonday = (day === 0 ? -6 : 1) - day; 
+currentWeekStart.setDate(currentDate.getDate() + diffToMonday);
 
-  // Filter workouts for the current week
-  const weeklyWorkouts = workouts.filter((workout) => {
-    const workoutDate = new Date(workout.date);
-    return workoutDate >= currentWeekStart && workoutDate <= currentWeekEnd;
+// Sunday of current week
+const currentWeekEnd = new Date(currentWeekStart);
+currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+const isSameOrAfter = (date1, date2) =>
+  date1.setHours(0,0,0,0) >= date2.setHours(0,0,0,0)
+
+  const isSameOrBefore = (date1, date2) =>
+    date1.setHours(0, 0, 0, 0) <= date2.setHours(0, 0, 0, 0)
+// Filter workouts for current week
+const weeklyWorkouts = workouts.filter((workout) => {
+  const workoutDate = new Date(workout.date);
+  return (isSameOrAfter(workoutDate, currentWeekStart) &&
+    isSameOrBefore(workoutDate, currentWeekEnd));
   });
 
   // Group calories burned by day and activity

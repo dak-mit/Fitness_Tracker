@@ -53,13 +53,20 @@ const goalsPage = () => {
     const today = new Date();
     if (goal.goalStart === "This week") {
       startDate = new Date(today);
-      startDate.setDate(today.getDate() - today.getDay());
+      const day = today.getDay();  // 0=Sun, 1=Mon, ..., 6=Sat
+      const diffToMonday = (day === 0 ? -6 : 1) - day; 
+      startDate.setDate(today.getDate() + diffToMonday);
+      
     } else if (goal.goalStart === "Next week") {
       startDate = new Date(today);
-      startDate.setDate(today.getDate() - today.getDay() + 7);
+      const day = today.getDay();
+      const diffToMonday = (day === 0 ? -6 : 1) - day;
+      startDate.setDate(today.getDate() + diffToMonday + 7); // Next week's Monday
+      
     } else {
       startDate = new Date(goal.createdAt || today);
     }
+    
 
     const relevantWorkouts = workouts.filter((workout) => {
       const workoutDate = new Date(workout.date);
@@ -180,13 +187,8 @@ const goalsPage = () => {
 
   return (
     <Layout>
-      <div className="mt-4 bg-white text-black p-6 rounded-lg">
-        {/* <button
-          onClick={logout}
-          className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-        >
-          Logout
-        </button> */}
+      <div className="mt-5 ml-5 mr-5 bg-white text-black p-6 rounded-lg">
+        
         <div className="mt-0 bg-white text-black p-4 rounded-lg">
           {/* Active Goals Section */}
           <div className="flex items-center justify-between mb-4">

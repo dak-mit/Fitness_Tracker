@@ -8,7 +8,7 @@ const createNutrition = async (req, res) => {
             date,
             nutrition,
             calories,
-            user: req.user
+            user: req.user.id
         });
         await NutritionData.save();
         res.status(201).json({ message: 'Nutrition added successfully' , NutritionData});

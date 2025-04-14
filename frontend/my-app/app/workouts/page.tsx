@@ -9,15 +9,25 @@ import { useRouter } from "next/navigation";
 // Helper function to filter weekly workouts
 const getWeeklyWorkouts = (workouts: any[]) => {
   const currentDate = new Date();
-  const currentWeekStart = new Date(currentDate);
-  currentWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
+  const isSameOrAfter = (date1, date2) =>
+  date1.setHours(0,0,0,0) >= date2.setHours(0,0,0,0)
 
-  const currentWeekEnd = new Date(currentDate);
-  currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+  const isSameOrBefore = (date1, date2) =>
+    date1.setHours(0, 0, 0, 0) <= date2.setHours(0, 0, 0, 0)
+  
+  const currentWeekStart = new Date(currentDate);
+  const day = currentDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const diffToMonday = (day === 0 ? -6 : 1) - day;  // Adjust for Monday start
+
+  currentWeekStart.setDate(currentDate.getDate() + diffToMonday);
+
+  const currentWeekEnd = new Date(currentWeekStart);
+  currentWeekEnd.setDate(currentWeekStart.getDate() + 6); // Sunday
 
   return workouts.filter((workout) => {
     const workoutDate = new Date(workout.date);
-    return workoutDate >= currentWeekStart && workoutDate <= currentWeekEnd;
+    return (isSameOrAfter(workoutDate, currentWeekStart) &&
+      isSameOrBefore(workoutDate, currentWeekEnd));
   });
 };
 
@@ -90,7 +100,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="mt-6 bg-white text-black p-6 rounded-lg">
+      <div className="mt-5 ml-5 mb-5 mr-5 bg-white text-black p-6 rounded-lg">
         <h2 className="text-2xl font-bold mb-4">Fitness Summary</h2>
 
         {/* Fitness Summary */}
