@@ -84,9 +84,9 @@ const AddMeal = () => {
                 <button
                   key={item.name}
                   type="button"
-                  onClick={() => setValue("nutrition", item.name.toLowerCase())}
+                  onClick={() => setValue("nutrition", item.name)}
                   className={`flex flex-col items-center justify-center border rounded-md w-14 h-14
-                    ${watch("nutrition") === item.name.toLowerCase()
+                    ${watch("nutrition") === item.name
                       ? "bg-[#1e2938] text-white"
                       : "bg-white text-black"
                     }`}
