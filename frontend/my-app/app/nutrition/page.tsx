@@ -10,16 +10,25 @@ import { faTrash,faUtensils,faBurger, faEgg, faCookie, faBowlRice, faWineGlass, 
 const getWeeklyMeals = (meals: any[]) => {
   const currentDate = new Date();
   const currentWeekStart = new Date(currentDate);
-  currentWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
-
-  const currentWeekEnd = new Date(currentDate);
+  const day = currentDate.getDay(); // 0=Sun, 1=Mon,...6=Sat
+  const diffToMonday = (day === 0 ? -6 : 1) - day;
+  currentWeekStart.setDate(currentDate.getDate() + diffToMonday);
+  
+  const currentWeekEnd = new Date(currentWeekStart);
   currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+
+  // Strip time from week start & end
+  currentWeekStart.setHours(0, 0, 0, 0);
+  currentWeekEnd.setHours(23, 59, 59, 999);  // inclusive till end of Sunday
 
   return meals.filter((meal) => {
     const mealDate = new Date(meal.date);
+    mealDate.setHours(0, 0, 0, 0);  // Strip time
+
     return mealDate >= currentWeekStart && mealDate <= currentWeekEnd;
   });
 };
+
 
 export default function Home() {
   //const { meals } = useMeal();
@@ -93,11 +102,6 @@ export default function Home() {
 
         {/* Fitness Summary */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          {/* <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
-            <h3 className="text-lg font-medium">Total Duration</h3>
-            <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalDuration : weeklyDuration} min</p>
-          </div> */}
-
           <div className="p-4 bg-[#f9fafa] rounded-lg text-center">
             <h3 className="text-lg font-medium"><FontAwesomeIcon icon={faBurger} className="fa-fw text-[#3b84d9]"/>Calories Consumed</h3>
             <p className="text-2xl font-semibold">{activeTab === "all-time" ? totalCalories : weeklyCalories} kcal</p>
@@ -137,7 +141,10 @@ export default function Home() {
     </tr>
   </thead>
   <tbody>
-    {(activeTab === "all-time" ? meals : weeklyMeals).map((meal, index) => (
+            {(activeTab === "all-time" ? meals : weeklyMeals)
+              .slice()
+              .sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime())
+              .map((meal, index) => (
       <tr key={index} className="border-t">
         <td className="p-2 w-1/5">{new Date(meal.date).toLocaleDateString("en-GB")}</td>
         <td className="p-2 w-1/5 flex items-center gap-2">

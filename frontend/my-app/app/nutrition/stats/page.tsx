@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,Label
 
 // Helper function to format workouts by day and activity
 const getWeeklyMealsData = (meals: any[]) => {
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"];
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   // Initialize weekly data structure
   const weeklyData = daysOfWeek.map((day) => ({
@@ -20,24 +20,30 @@ const getWeeklyMealsData = (meals: any[]) => {
 
   const currentDate = new Date();
   const currentWeekStart = new Date(currentDate);
-  currentWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
+  const day = currentDate.getDay(); // 0=Sun, 1=Mon,...6=Sat
+  const diffToMonday = (day === 0 ? -6 : 1) - day;
+  currentWeekStart.setDate(currentDate.getDate() + diffToMonday);
+  currentWeekStart.setHours(0, 0, 0, 0);  // normalize
 
   const currentWeekEnd = new Date(currentWeekStart);
   currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+  currentWeekEnd.setHours(23, 59, 59, 999);  // include full day
 
-  // Filter workouts for the current week
+  // Filter meals for the current week
   const weeklyMeals = meals.filter((meal) => {
     const mealDate = new Date(meal.date);
+    mealDate.setHours(0, 0, 0, 0); // normalize to compare only date
     return mealDate >= currentWeekStart && mealDate <= currentWeekEnd;
   });
 
-  // Group calories burned by day and activity
+  // Group calories consumed by day and nutrition type
   weeklyMeals.forEach((meal) => {
     const mealDate = new Date(meal.date);
     const jsDayIndex = mealDate.getDay();
-    const dayIndex = (jsDayIndex+6)%7;
-    const nutrition = meal.nutrition.charAt(0).toUpperCase() + meal.nutrition.slice(1).toLowerCase();
+    const dayIndex = (jsDayIndex + 6) % 7; // Convert Sunday-first to Monday-first
 
+    const nutrition =
+      meal.nutrition.charAt(0).toUpperCase() + meal.nutrition.slice(1).toLowerCase();
 
     if (weeklyData[dayIndex][nutrition] !== undefined) {
       weeklyData[dayIndex][nutrition] += meal.calories;
@@ -46,6 +52,7 @@ const getWeeklyMealsData = (meals: any[]) => {
 
   return weeklyData;
 };
+
 
 const StatsPage = () => {
   //const { meals } = useMeal();
