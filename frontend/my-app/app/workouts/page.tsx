@@ -11,11 +11,13 @@ import { Workout } from "../types";
 // Helper function to filter weekly workouts
 const getWeeklyWorkouts = (workouts: Workout[]) => {
   const currentDate = new Date();
-  const isSameOrAfter = (date1: Date, date2: Date) =>
-  date1.setHours(0,0,0,0) >= date2.setHours(0,0,0,0)
+  
+  // Helper functions with proper TypeScript types
+  const isSameOrAfter = (date1: Date, date2: Date): boolean =>
+    date1.setHours(0, 0, 0, 0) >= date2.setHours(0, 0, 0, 0);
 
-  const isSameOrBefore = (date1: Date, date2: Date) =>
-    date1.setHours(0, 0, 0, 0) <= date2.setHours(0, 0, 0, 0)
+  const isSameOrBefore = (date1: Date, date2: Date): boolean =>
+    date1.setHours(0, 0, 0, 0) <= date2.setHours(0, 0, 0, 0);
   
   const currentWeekStart = new Date(currentDate);
   const day = currentDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
@@ -48,7 +50,7 @@ export default function Home() {
 
   const fetchWorkouts = async()=>{
     try {
-      const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/workouts", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/workouts`, {
         credentials: "include", 
       });
       if(!response.ok){
