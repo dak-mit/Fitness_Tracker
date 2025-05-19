@@ -19,9 +19,9 @@ export default function Home() {
       const fetchAll = async() => {
         try{
           const [userRes, workoutRes, mealRes] = await Promise.all([
-            fetch("http://localhost:4000/api/auth/me",{credentials:"include"}),
-            fetch("http://localhost:4000/api/workouts",{credentials:"include"}),
-            fetch("http://localhost:4000/api/nutrition",{credentials:"include"}),
+            fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/auth/me",{credentials:"include"}),
+            fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/workouts",{credentials:"include"}),
+            fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/nutrition",{credentials:"include"}),
           ]);
 
           if(!userRes.ok || !workoutRes.ok || !mealRes.ok){
@@ -59,16 +59,16 @@ export default function Home() {
     
       try {
         const [userRes, workoutRes, nutritionRes] = await Promise.all([
-          fetch("http://localhost:4000/api/auth/me", { credentials: "include" }),
-          fetch("http://localhost:4000/api/workouts", { credentials: "include" }),
-          fetch("http://localhost:4000/api/nutrition", { credentials: "include" }),
+          fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/auth/me", { credentials: "include" }),
+          fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/workouts", { credentials: "include" }),
+          fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/nutrition", { credentials: "include" }),
         ]);
     
         const user = await userRes.json();
         const workouts = await workoutRes.json();
         const nutrition = await nutritionRes.json();
     
-        const res = await fetch("http://localhost:4000/api/ai/recommendations", {
+        const res = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/ai/recommendations", {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },

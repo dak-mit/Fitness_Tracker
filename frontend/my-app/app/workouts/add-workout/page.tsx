@@ -14,6 +14,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns"
 import { useState } from "react";
+import { Workout } from "../../types";
+
 // Zod Schema
 
 const workoutSchema = z.object({
@@ -27,7 +29,14 @@ const workoutSchema = z.object({
 
 type WorkoutFormData = z.infer<typeof workoutSchema>;
 
-const AddWorkout = () => {
+export default function AddWorkout() {
+  const [workout, setWorkout] = useState<Partial<Workout>>({
+    duration: 0,
+    calories: 0,
+    activity: '',
+    date: new Date().toISOString().split('T')[0]
+  });
+
   const { register, handleSubmit, setValue, watch,formState: { errors }, reset } = useForm<WorkoutFormData>({
     resolver: zodResolver(workoutSchema),
   });
@@ -43,7 +52,7 @@ const AddWorkout = () => {
 
   const onSubmit = async(data: WorkoutFormData) => {
     try{
-     const response = await fetch("http://localhost:4000/api/workouts", {
+     const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/workouts", {
        method: "POST",
        credentials: "include",
        headers: {
@@ -92,14 +101,19 @@ const AddWorkout = () => {
 
   <DatePicker
     selected={watch("startTime") ? new Date(`1970-01-01T${watch("startTime")}`) : null}
-    onChange={(time: Date) => {
-      const formattedTime = time.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      setValue("startTime", formattedTime, { shouldValidate: true });
+    onChange={(date: Date | null) => {
+      if (date) {
+        const formattedTime = date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+        setValue("startTime", formattedTime, { shouldValidate: true });
+      } else {
+        setValue("startTime", "", { shouldValidate: true }); // Optional: clear the field
+      }
     }}
+    
     showTimeSelect
     showTimeSelectOnly
     timeIntervals={15} // shows every 15 min
@@ -122,8 +136,12 @@ const AddWorkout = () => {
 
   <DatePicker
   selected={watch("date") ? new Date(watch("date")) : null}
-  onChange={(date: Date) => {
-    setValue("date", date.toISOString().split('T')[0], { shouldValidate: true })
+  onChange={(date: Date | null) => {
+    if (date) {
+      setValue("date", date.toISOString().split('T')[0], { shouldValidate: true });
+    } else {
+      setValue("date", "", { shouldValidate: true }); // Optional: handle null
+    }
   }}
   onMonthChange={(date) => setViewDate(date)}   // To track visible month
   maxDate={new Date()}
@@ -196,5 +214,3 @@ const AddWorkout = () => {
     </Layout>
   );
 };
-
-export default AddWorkout;

@@ -12,6 +12,7 @@ import { Poppins } from "next/font/google";
 import { faBullseye, faCheckDouble,faChevronUp,faChevronDown, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
+import { Goal } from "../../types";
 
 Modal.setAppElement("body");
 const poppins = Poppins({
@@ -19,45 +20,47 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 
-const goalsPage = () => {
+export default function Goals() {
   // const { token, logout } = useAuth();
   // const router = useRouter();
   // console.log("goalsPage render: Token:", token); // Debug on every render
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [goals, setGoals] = useState<GoalFormData[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [showCompleted, setShowCompleted] = useState(false);
 
   const goalSchema = z.object({
-    workoutName: z.string().min(1, "Workout name is required"),
-    goalType: z.string().min(1, "Goal type is required"),
-    goalTarget: z.number().min(1, "Goal target is required"),
-    goalStart: z.string().min(1, "Goal start is required"),
+    name: z.string().min(1, "Workout name is required"),
+    type: z.string().min(1, "Goal type is required"),
+    target: z.number().min(1, "Goal target is required"),
+    deadline: z.string().min(1, "Goal deadline is required"),
+    progress: z.number().default(0),
+    completed: z.boolean().default(false)
   });
 
-  type GoalFormData = z.infer<typeof goalSchema> & {
-    name: string;
-    progress: number;
-    completed: boolean;
-  };
+  type GoalFormData = z.infer<typeof goalSchema>;
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<GoalFormData>({
     resolver: zodResolver(goalSchema),
+    defaultValues: {
+      progress: 0,
+      completed: false
+    }
   });
 
-  const calculateProgress = (goal, workouts) => {
+  const calculateProgress = (goal: Goal, workouts: any[]) => {
     let startDate;
   const today = new Date();
   const day = today.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
   const diffToMonday = (day === 0 ? -6 : 1) - day;
 
-  if (goal.goalStart === "This week") {
+  if (goal.deadline === "This week") {
     startDate = new Date(today); // Clone today
     startDate.setDate(startDate.getDate() + diffToMonday); // Move to Monday
-  } else if (goal.goalStart === "Next week") {
+  } else if (goal.deadline === "Next week") {
     startDate = new Date(today);
     startDate.setDate(startDate.getDate() + diffToMonday + 7); // Next Monday
   } else {
@@ -73,29 +76,29 @@ const goalsPage = () => {
     start.setHours(0, 0, 0, 0);
   
     return (
-      workout.workoutName.trim().toLowerCase() === goal.workoutName.trim().toLowerCase() &&
+      workout.name.trim().toLowerCase() === goal.name.trim().toLowerCase() &&
       workoutDate >= start
     );
   });
 
     let progress = 0;
-    if (goal.goalType === "numWorkouts") {
+    if (goal.type === "numWorkouts") {
       const numWorkouts = relevantWorkouts.length;
-      progress = (numWorkouts / goal.goalTarget) * 100;
-    } else if (goal.goalType === "duration") {
+      progress = (numWorkouts / goal.target) * 100;
+    } else if (goal.type === "duration") {
       const totalDuration = relevantWorkouts.reduce((sum, workout) => sum + (workout.duration || 0), 0);
-      progress = (totalDuration / goal.goalTarget) * 100;
-    } else if (goal.goalType === "calories") {
+      progress = (totalDuration / goal.target) * 100;
+    } else if (goal.type === "calories") {
       const totalCalories = relevantWorkouts.reduce((sum, workout) => sum + (workout.calories || 0), 0);
-      progress = (totalCalories / goal.goalTarget) * 100;
+      progress = (totalCalories / goal.target) * 100;
     }
 
     progress = Math.min(Math.round(progress), 100);
     const completed = progress >= 100;
 
     console.log(
-      "Looking for goal:", goal.workoutName,
-      "against workouts:", workouts.map(w => w.workoutName)
+      "Looking for goal:", goal.name,
+      "against workouts:", workouts.map(w => w.name)
     );
     console.log("Raw:", workouts[0].date, "Parsed:", new Date(workouts[0].date));
 
@@ -125,7 +128,7 @@ const goalsPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const goalsResponse = await fetch("http://localhost:4000/api/goals", {
+        const goalsResponse = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/goals", {
           method: "GET",
           credentials:"include",
 
@@ -136,7 +139,7 @@ const goalsPage = () => {
         const goalsData = await goalsResponse.json();
         console.log("Fetched goals:", goalsData);
 
-        const workoutsResponse = await fetch("http://localhost:4000/api/workouts",{
+        const workoutsResponse = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/workouts",{
           credentials:"include",
         });
 
@@ -145,19 +148,19 @@ const goalsPage = () => {
         }
         const workoutsData = await workoutsResponse.json();
 
-        const normalizedGoals = goalsData.map((goal) => ({
+        const normalizedGoals = goalsData.map((goal: Goal) => ({
           ...goal,
           workoutName: goal.name, // 🔥 Normalize for consistent access
         }));
         
-        const updatedGoals = normalizedGoals.map((goal) =>
+        const updatedGoals = normalizedGoals.map((goal: Goal) =>
           calculateProgress(goal, workoutsData)
         );
         setGoals(updatedGoals);
         setWorkouts(workoutsData);
       } catch (error) {
         
-        setError(error.message);
+        setError(error instanceof Error ? error.message : 'An error occurred');
         
       } finally {
         setIsLoading(false);
@@ -168,23 +171,23 @@ const goalsPage = () => {
 
   useEffect(() => {
     if (workouts.length > 0 && goals.length > 0) {
-      const updatedGoals = goals.map((goal) => calculateProgress(goal, workouts));
+      const updatedGoals = goals.map((goal: Goal) => calculateProgress(goal, workouts));
       setGoals(updatedGoals);
     }
   }, [workouts]);
 
   const onSubmit = async (data: GoalFormData) => {
     const newGoal = {
-      name: data.workoutName,
-      goalType: data.goalType,
-      goalTarget: data.goalTarget,
-      goalStart: data.goalStart,
-      progress: 0,
-      completed: false,
+      name: data.name,
+      type: data.type,
+      target: data.target,
+      deadline: data.deadline,
+      progress: data.progress,
+      completed: data.completed
     };
 
     try {
-      const response = await fetch("http://localhost:4000/api/goals", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/goals", {
         method: "POST",
         credentials:"include",
         headers: {"Content-Type" : "application/json"},
@@ -222,7 +225,7 @@ const goalsPage = () => {
           </div>
           <div className="grid grid-cols-3 gap-6">
             {goals
-              .filter((goal) => !goal.completed && goal.goalTarget && goal.name && goal.goalType && goal.goalStart)
+              .filter((goal) => !goal.completed && goal.target && goal.name && goal.type && goal.deadline)
               .map((goal, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div className="w-24 h-24">
@@ -236,11 +239,11 @@ const goalsPage = () => {
                     />
                   </div>
                   <p className="text-center mt-2">
-                    {goal.goalType === "numWorkouts"
-                      ? `Complete ${goal.goalTarget} ${goal.name} ${goal.goalStart}`
-                      : goal.goalType === "calories"
-                      ? `Burn ${goal.goalTarget} calories from ${goal.goalStart} by ${goal.name}`
-                      : `Do ${goal.goalTarget} minutes of ${goal.name} ${goal.goalStart}`}
+                    {goal.type === "numWorkouts"
+                      ? `Complete ${goal.target} ${goal.name} ${goal.deadline}`
+                      : goal.type === "calories"
+                      ? `Burn ${goal.target} calories from ${goal.deadline} by ${goal.name}`
+                      : `Do ${goal.target} minutes of ${goal.name} ${goal.deadline}`}
                   </p>
                 </div>
               ))}
@@ -264,8 +267,10 @@ const goalsPage = () => {
                 <label className="block text-black-700">
                   Workout Name <span className="text-red-700">*</span>
                 </label>
-                <input type="text" {...register("workoutName")} className="w-full p-2 border rounded" />
-                {errors.workoutName && <p className="text-red-500 text-sm">{errors.workoutName.message}</p>}
+                <input type="text" {...register("name")} className="w-full p-2 border rounded" />
+                {errors.name && (
+                  <p className="text-red-500 text-sm">{errors.name.message}</p>
+                )}
               </div>
 
               {/* Goal Type */}
@@ -273,13 +278,15 @@ const goalsPage = () => {
                 <label className="block text-black-700">
                   Goal Type <span className="text-red-700">*</span>
                 </label>
-                <select {...register("goalType")} className="w-full p-2 border rounded">
+                <select {...register("type")} className="w-full p-2 border rounded">
                   <option value="">Select a goal type</option>
                   <option value="numWorkouts">No. of Workouts</option>
                   <option value="duration">Duration</option>
                   <option value="calories">Calories</option>
                 </select>
-                {errors.goalType && <p className="text-red-500 text-sm">{errors.goalType.message}</p>}
+                {errors.type && (
+                  <p className="text-red-500 text-sm">{errors.type.message}</p>
+                )}
               </div>
 
               {/* Goal Target */}
@@ -289,10 +296,12 @@ const goalsPage = () => {
                 </label>
                 <input
                   type="number"
-                  {...register("goalTarget", { valueAsNumber: true })}
+                  {...register("target", { valueAsNumber: true })}
                   className="w-full p-2 border rounded"
                 />
-                {errors.goalTarget && <p className="text-red-500 text-sm">{errors.goalTarget.message}</p>}
+                {errors.target && (
+                  <p className="text-red-500 text-sm">{errors.target.message}</p>
+                )}
               </div>
 
               {/* Goal Start */}
@@ -300,12 +309,14 @@ const goalsPage = () => {
                 <label className="block text-black-700">
                   Start <span className="text-red-700">*</span>
                 </label>
-                <select {...register("goalStart")} className="w-full p-2 border rounded">
+                <select {...register("deadline")} className="w-full p-2 border rounded">
                   <option value="">Select starting time</option>
                   <option value="This week">This week</option>
                   <option value="Next week">Next week</option>
                 </select>
-                {errors.goalStart && <p className="text-red-500 text-sm">{errors.goalStart.message}</p>}
+                {errors.deadline && (
+                  <p className="text-red-500 text-sm">{errors.deadline.message}</p>
+                )}
               </div>
 
               {/* Save Button */}
@@ -350,11 +361,11 @@ const goalsPage = () => {
             <FontAwesomeIcon icon={faCheck} />
           </div>
           <p className="text-sm text-gray-700">
-            {goal.goalType === "numWorkouts"
-              ? `Complete ${goal.goalTarget} ${goal.workoutName} ${goal.goalStart}`
-              : goal.goalType === "calories"
-              ? `Burn ${goal.goalTarget} calories from ${goal.goalStart} by ${goal.workoutName}`
-              : `Do ${goal.goalTarget} minutes of ${goal.workoutName} ${goal.goalStart}`}
+            {goal.type === "numWorkouts"
+              ? `Complete ${goal.target} ${goal.name} ${goal.deadline}`
+              : goal.type === "calories"
+              ? `Burn ${goal.target} calories from ${goal.deadline} by ${goal.name}`
+              : `Do ${goal.target} minutes of ${goal.name} ${goal.deadline}`}
           </p>
         </div>
       ))}
@@ -369,5 +380,3 @@ const goalsPage = () => {
     </Layout>
   );
 };
-
-export default goalsPage;

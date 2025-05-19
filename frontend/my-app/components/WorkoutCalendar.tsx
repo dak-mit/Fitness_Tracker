@@ -14,7 +14,7 @@ useEffect(() => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:4000/api/workouts',{
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_BASE}/api/workouts',{
         credentials:"include",
       });
       if (!response.ok) {

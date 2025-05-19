@@ -1,5 +1,6 @@
 "use client";
 import NutriLayout from "../../components/NutriLayout";
+import { Meal } from "../types";
 //import { useMeal } from "../../context/MealContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,7 +8,7 @@ import { faTrash,faUtensils,faBurger, faEgg, faCookie, faBowlRice, faWineGlass, 
 //import WorkoutCalendar from "../../components/WorkoutCalendar";
 
 // Helper function to filter weekly workouts
-const getWeeklyMeals = (meals: any[]) => {
+const getWeeklyMeals = (meals: Meal[]) => {
   const currentDate = new Date();
   const currentWeekStart = new Date(currentDate);
   const day = currentDate.getDay(); // 0=Sun, 1=Mon,...6=Sat
@@ -30,9 +31,9 @@ const getWeeklyMeals = (meals: any[]) => {
 };
 
 
-export default function Home() {
+export default function Nutrition() {
   //const { meals } = useMeal();
-  const [meals, setMeals] = useState([]);
+  const [meals, setMeals] = useState<Meal[]>([]);
   const [activeTab, setActiveTab] = useState("all-time");
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function Home() {
 
   const fetchNutritions = async()=>{
     try {
-      const response = await fetch('http://localhost:4000/api/nutrition',{
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_BASE}/api/nutrition',{
         credentials:"include"
       });
       if(!response.ok){
@@ -66,7 +67,7 @@ export default function Home() {
 
     setIsDeleting(true);
   try {
-    const response = await fetch(`http://localhost:4000/api/nutrition/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/nutrition/${id}`, {
       method: 'DELETE',
       credentials:"include"
     });
@@ -77,7 +78,7 @@ export default function Home() {
 
     fetchNutritions();
   } catch (error) {
-    console.error('Error deleting nutrition:', error.message);
+    console.error('Error deleting nutrition:', error);
     alert('Failed to delete nutrition. Please try again.');
   } finally {
     setIsDeleting(false);
@@ -148,14 +149,14 @@ export default function Home() {
       <tr key={index} className="border-t">
         <td className="p-2 w-1/5">{new Date(meal.date).toLocaleDateString("en-GB")}</td>
         <td className="p-2 w-1/5 flex items-center gap-2">
-          {meal.nutrition === "Breakfast" && <FontAwesomeIcon icon={faEgg} className="fa-fw text-[#3b84d9]" />}
-          {meal.nutrition === "Lunch" && <FontAwesomeIcon icon={faUtensils} className="fa-fw text-[#3b84d9]" />}
-          {meal.nutrition === "Dinner" && <FontAwesomeIcon icon={faWineGlass} className="fa-fw text-[#3b84d9]" />}
-          {meal.nutrition === "Snacks" && <FontAwesomeIcon icon={faCookie} className="fa-fw text-[#3b84d9]" />}
-          {meal.nutrition === "Others" && <FontAwesomeIcon icon={faBowlFood} className="fa-fw text-[#3b84d9]" />}
-          {meal.nutrition.charAt(0).toUpperCase()+meal.nutrition.slice(1)}
+          {meal.mealType === "Breakfast" && <FontAwesomeIcon icon={faEgg} className="fa-fw text-[#3b84d9]" />}
+          {meal.mealType === "Lunch" && <FontAwesomeIcon icon={faUtensils} className="fa-fw text-[#3b84d9]" />}
+          {meal.mealType === "Dinner" && <FontAwesomeIcon icon={faWineGlass} className="fa-fw text-[#3b84d9]" />}
+          {meal.mealType === "Snacks" && <FontAwesomeIcon icon={faCookie} className="fa-fw text-[#3b84d9]" />}
+          {meal.mealType === "Others" && <FontAwesomeIcon icon={faBowlFood} className="fa-fw text-[#3b84d9]" />}
+          {meal.mealType.charAt(0).toUpperCase()+meal.mealType.slice(1)}
         </td>
-        <td className="p-2 w-1/5">{meal.mealName}</td>
+        <td className="p-2 w-1/5">{meal.name}</td>
         <td className="p-2 w-1/5">{meal.calories} kcal </td>
         <td className="p-2 w-1/5">
         <button onClick={() => handleDelete(meal._id)} disabled={isDeleting}>

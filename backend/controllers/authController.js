@@ -33,7 +33,7 @@ const signup = async (req, res) => {
     // Set JWT as HTTP-only cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // use secure in prod
+      secure: process.env.NODE_ENV === "production", 
       sameSite: "strict",
       maxAge: 3600000, // 1 hour
     });
@@ -75,7 +75,7 @@ const login = async (req, res) => {
   }
 };
 
-// Optional: logout route to clear cookie
+//LogOut -> Will Remove/Clear Out The Cookie
 const logout = (req, res) => {
   res.clearCookie("token").status(200).json({ message: "Logged out" });
 };

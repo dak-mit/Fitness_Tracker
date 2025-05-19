@@ -6,13 +6,15 @@ import WorkoutCalendar from "../../components/WorkoutCalendar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faClock, faHeart, faDumbbell, faPersonRunning, faFire, faPersonBiking, faPersonSwimming, faHandsPraying } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from "next/navigation";
+import { Workout } from "../types";
+
 // Helper function to filter weekly workouts
-const getWeeklyWorkouts = (workouts: any[]) => {
+const getWeeklyWorkouts = (workouts: Workout[]) => {
   const currentDate = new Date();
-  const isSameOrAfter = (date1, date2) =>
+  const isSameOrAfter = (date1: Date, date2: Date) =>
   date1.setHours(0,0,0,0) >= date2.setHours(0,0,0,0)
 
-  const isSameOrBefore = (date1, date2) =>
+  const isSameOrBefore = (date1: Date, date2: Date) =>
     date1.setHours(0, 0, 0, 0) <= date2.setHours(0, 0, 0, 0)
   
   const currentWeekStart = new Date(currentDate);
@@ -34,7 +36,7 @@ const getWeeklyWorkouts = (workouts: any[]) => {
 export default function Home() {
   //const { workouts, } = useWorkout();
   const router = useRouter();
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [activeTab, setActiveTab] = useState("all-time");
 
   //Fetching From The Backend
@@ -46,7 +48,7 @@ export default function Home() {
 
   const fetchWorkouts = async()=>{
     try {
-      const response = await fetch("http://localhost:4000/api/workouts", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/workouts", {
         credentials: "include", 
       });
       if(!response.ok){
@@ -69,7 +71,7 @@ export default function Home() {
 
     setIsDeleting(true);
   try {
-    const response = await fetch(`http://localhost:4000/api/workouts/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/workouts/${id}`, {
       method: 'DELETE',
       credentials: "include",
     });
@@ -80,7 +82,7 @@ export default function Home() {
 
     fetchWorkouts();
   } catch (error) {
-    console.error('Error deleting workout:', error.message);
+    console.error('Error deleting workout:', error);
     alert('Failed to delete workout. Please try again.');
   } finally {
     setIsDeleting(false);

@@ -10,27 +10,38 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBowlFood, faCookie, faEgg, faUtensils, faWineGlass } from "@fortawesome/free-solid-svg-icons";
+import { Meal } from "../../types";
 
-const nutriSchema = z.object({
-  mealName: z.string().min(1, "Meal name is required"),
+const mealSchema = z.object({
+  name: z.string().min(1, "Meal name is required"),
   date: z.string().min(1, "Date is required"),
-  nutrition: z.string().min(1, "Nutrition type is required"),
+  mealType: z.string().min(1, "Meal type is required"),
   calories: z.coerce.number().min(1, "Calories consumed is required"),
+  protein: z.coerce.number().min(0, "Protein must be 0 or greater"),
+  carbs: z.coerce.number().min(0, "Carbs must be 0 or greater"),
+  fat: z.coerce.number().min(0, "Fat must be 0 or greater"),
 });
 
-type NutriFormData = z.infer<typeof nutriSchema>;
+type MealFormData = z.infer<typeof mealSchema>;
 
-const AddMeal = () => {
-  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<NutriFormData>({
-    resolver: zodResolver(nutriSchema),
+export default function AddMeal() {
+  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<MealFormData>({
+    resolver: zodResolver(mealSchema),
+    defaultValues: {
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      calories: 0,
+      date: new Date().toISOString().split('T')[0]
+    }
   });
 
   const router = useRouter();
-  const [viewDate, setViewDate] = useState(new Date());
+  const [viewDate, setViewDate] = useState<Date>(new Date());
 
-  const onSubmit = async (data: NutriFormData) => {
+  const onSubmit = async (data: MealFormData) => {
     try {
-      const response = await fetch("http://localhost:4000/api/nutrition", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/nutrition", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -66,8 +77,10 @@ const AddMeal = () => {
           {/* Meal Name */}
           <div className="mb-4">
             <label>Meal Name<span className="text-red-700">*</span></label>
-            <input type="text" {...register("mealName")} className="w-full p-2 border rounded" />
-            {errors.mealName && <p className="text-red-500 text-sm">{errors.mealName.message}</p>}
+            <input type="text" {...register("name")} className="w-full p-2 border rounded" />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Nutrition */}
@@ -84,9 +97,9 @@ const AddMeal = () => {
                 <button
                   key={item.name}
                   type="button"
-                  onClick={() => setValue("nutrition", item.name)}
+                  onClick={() => setValue("mealType", item.name)}
                   className={`flex flex-col items-center justify-center border rounded-md w-14 h-14
-                    ${watch("nutrition") === item.name
+                    ${watch("mealType") === item.name
                       ? "bg-[#1e2938] text-white"
                       : "bg-white text-black"
                     }`}
@@ -96,7 +109,9 @@ const AddMeal = () => {
                 </button>
               ))}
             </div>
-            {errors.nutrition && <p className="text-red-500 text-sm">{errors.nutrition.message}</p>}
+            {errors.mealType && (
+              <p className="text-red-500 text-sm mt-1">{errors.mealType.message}</p>
+            )}
           </div>
 
           {/* Date & Calories */}
@@ -105,7 +120,14 @@ const AddMeal = () => {
               <label>Date<span className="text-red-700">*</span></label>
               <DatePicker
                 selected={watch("date") ? new Date(watch("date")) : null}
-                onChange={(date: Date) => setValue("date", date.toISOString().split('T')[0], { shouldValidate: true })}
+                onChange={(date: Date | null) => {
+                  if (date) {
+                    setValue("date", date.toISOString().split('T')[0], { shouldValidate: true });
+                  } else {
+                    setValue("date", "", { shouldValidate: true }); // Optional fallback
+                  }
+                }}
+                
                 onMonthChange={(date) => setViewDate(date)}
                 maxDate={new Date()}
                 placeholderText="Select date"
@@ -139,4 +161,4 @@ const AddMeal = () => {
   );
 };
 
-export default AddMeal;
+

@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const handleLogout = async () => {
     try{
-      const res = await fetch("http://localhost:4000/api/auth/logout",{
+      const res = await fetch("${process.env.NEXT_PUBLIC_API_BASE}/api/auth/logout",{
         method: "POST",
         credentials:"include",
       });
