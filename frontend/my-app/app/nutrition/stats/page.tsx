@@ -5,7 +5,15 @@ import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,Label } from "recharts";
 
 // Helper function to format workouts by day and activity
-const getWeeklyMealsData = (meals: any[]) => {
+interface Meal {
+  _id: string;
+  name: string;
+  calories: number;
+  date: string;
+  mealType: string;
+}
+
+const getWeeklyMealsData = (meals: Meal[]) => {
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   // Initialize weekly data structure
@@ -42,11 +50,11 @@ const getWeeklyMealsData = (meals: any[]) => {
     const jsDayIndex = mealDate.getDay();
     const dayIndex = (jsDayIndex + 6) % 7; // Convert Sunday-first to Monday-first
 
-    const nutrition =
-      meal.nutrition.charAt(0).toUpperCase() + meal.nutrition.slice(1).toLowerCase();
-
-    if (weeklyData[dayIndex][nutrition] !== undefined) {
-      weeklyData[dayIndex][nutrition] += meal.calories;
+    const validMealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Evening', 'Other'] as const;
+    const mealType = meal.mealType.charAt(0).toUpperCase() + meal.mealType.slice(1).toLowerCase() as typeof validMealTypes[number];
+    
+    if (validMealTypes.includes(mealType as any)) {
+      weeklyData[dayIndex][mealType] += meal.calories;
     }
   });
 
@@ -57,7 +65,16 @@ const getWeeklyMealsData = (meals: any[]) => {
 const StatsPage = () => {
   //const { meals } = useMeal();
     const [meals, setMeals] = useState([]);
-  const [weeklyData, setWeeklyData] = useState([]);
+interface WeeklyData {
+  day: string;
+  Breakfast: number;
+  Lunch: number;
+  Dinner: number;
+  Evening: number;
+  Other: number;
+}
+
+const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
 
     useEffect(() => {
         const fetchNutritions = async () => {
