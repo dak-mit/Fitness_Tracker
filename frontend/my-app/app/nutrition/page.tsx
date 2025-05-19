@@ -127,7 +127,7 @@ export default function Nutrition() {
     onClick={() => setActiveTab("weekly")}
   >
     Weekly View
-  </button>
+  </button>-
 </div>
 
 {/* Workout Table (All-Time and Weekly Share Same Table Structure) */}
